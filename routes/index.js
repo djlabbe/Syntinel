@@ -15,25 +15,45 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'}); // Change 'SECRET'
 
 var Test = mongoose.model('Test');
 var Result = mongoose.model('Result');
+var App = mongoose.model('App');
 
-
+/********************/
+/* HOME PAGE ROUTES */
+/********************/
 
 /* Get home page. */
 router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });
 
-
-/* Get all tests */
-router.get('/tests', function(req, res, next) {
-  Test.find(function(err, tests){
+/* Get all apps */
+router.get('/apps', function(req, res, next) {
+  App.find(function(err, apps){
     if(err){ return next(err); }
 
-    res.json(tests);
+    res.json(apps);
   });
 });
 
-router.post('/tests', upload.single('file'), function (req, res, next) {
+/* Save a new app */
+router.post('/apps', function(req, res, next) {
+  var app = new App(req.body);
+
+  app.save(function(err, app){
+    if(err){ return next(err); }
+
+    res.json(app);
+  });
+});
+
+
+/********************/
+/* APP PAGE ROUTES */
+/********************/
+
+
+/* Save a new test, update the app*/
+router.post('/apps/:app/tests', upload.single('file'), function (req, res, next) {
   console.log(req.body);
   console.log(req.file);
 
@@ -48,13 +68,83 @@ router.post('/tests', upload.single('file'), function (req, res, next) {
   var test = new Test(testData);
   
   test.save(function (err, test) {
-    if (err) {
-      return next(err);
-    } else {
-      res.json(test);
-    }
-  });
+    if (err) {return next(err); }
 
+    req.app.tests.push(test);
+    req.app.save(function(err, app) {
+      if (err) {return next(err); }
+
+      res.json(test);
+    });
+  });
+});
+
+
+/* Retrieve tests along with apps */
+router.get('/apps/:app', function(req, res, next) {
+  req.app.populate('tests', function(err, app) {
+    if (err) { return next(err); }
+
+    res.json(app);
+  });
+});
+
+
+/********************/
+/* TEST PAGE ROUTES */
+/********************/
+
+/* Retrieve results along with tests */
+router.get('/tests/:test', function(req, res, next) {
+  req.test.populate('results', function(err, test) {
+    if (err) { return next(err); }
+
+    res.json(test);
+  });
+});
+
+/* "Run" a test */
+router.put('/tests/:test/run', auth, function(req, res, next) {
+  req.test.run(function(err, test){
+    if (err) { return next(err); }
+
+    res.json(test);
+  });
+});
+
+/* Add a result to a test */
+router.post('/tests/:test/results', function(req, res, next) {
+  var result = new Result(req.body);
+  result.test = req.test;
+
+  result.save(function(err, result){
+    if(err){ return next(err); }
+
+    req.test.results.push(result);
+    req.test.save(function(err, test) {
+      if(err){ return next(err); }
+
+      res.json(result);
+    });
+  });
+});
+
+
+/****************************/
+/* PRELOAD PARAMETER ROUTES */
+/****************************/
+
+/* Preload a APP object by id */
+router.param('app', function(req, res, next, id) {
+  var query = App.findById(id);
+
+  query.exec(function (err, app){
+    if (err) { return next(err); }
+    if (!app) { return next(new Error('can\'t find app')); }
+
+    req.app = app;
+    return next();
+  });
 });
 
 /* Preload a TEST object by id */
@@ -83,41 +173,10 @@ router.param('result', function(req, res, next, id) {
   });
 });
 
-/* Retrieve results along with tests */
-router.get('/tests/:test', function(req, res, next) {
-  req.test.populate('results', function(err, test) {
-    if (err) { return next(err); }
 
-    res.json(test);
-  });
-});
-
-/* "Run" a test */
-router.put('/tests/:test/run', auth, function(req, res, next) {
-  req.test.run(function(err, test){
-    if (err) { return next(err); }
-
-    res.json(test);
-  });
-});
-
-
-/* Add a result to a test */
-router.post('/tests/:test/results', function(req, res, next) {
-  var result = new Result(req.body);
-  result.test = req.test;
-
-  result.save(function(err, result){
-    if(err){ return next(err); }
-
-    req.test.results.push(result);
-    req.test.save(function(err, test) {
-      if(err){ return next(err); }
-
-      res.json(result);
-    });
-  });
-});
+/****************************/
+/* AUTH              ROUTES */
+/****************************/
 
 /* Creates a user given a username and password */
 router.post('/register', function(req, res, next){
@@ -138,7 +197,6 @@ router.post('/register', function(req, res, next){
   });
 });
 
-
 /* Authenticates the user and returns a token to the client */
 router.post('/login', function(req, res, next){
   if(!req.body.username || !req.body.password){
@@ -155,8 +213,6 @@ router.post('/login', function(req, res, next){
     }
   })(req, res, next);
 });
-
-
 
 module.exports = router;
 

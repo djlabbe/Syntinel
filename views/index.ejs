@@ -30,17 +30,61 @@
   </div>
 
 
-<!--Template for Home Page-->
 
+<!--Template for Home Page-->
 <script type="text/ng-template" id="/home.html">
 
         <div class="page-header">
           <h1>Syntinel</h1>
         </div>
-
-        <div ng-repeat="test in tests | orderBy:'name'">
+        <h3>Apps</h3>
+        <div ng-repeat="app in apps | orderBy:'name'">
           <span>
-              {{test.name}} - Status: {{test.status}}
+             <a style="font-size: 20px" href="#/apps/{{app._id}}"> {{app.name}} </a> {{app.description}}
+          </span>
+        </div>
+
+
+        <div ng-show="isLoggedIn()">
+            <form ng-submit="addApp()">
+              <h3>Add a new App:</h3>
+              <label for="name">Name:</label>
+              <input type="text" name="name" id="name" ng-model="name" required/>
+              <br/>
+              <label for="description">Description:</label>
+              <input type="text" name="description" id="description" ng-model="description" required/>
+              <br/>              
+              <input type="submit" value="Submit"/>
+            </form>
+        </div>
+
+
+        <div ng-hide="isLoggedIn()">
+          <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can create a new App.</h3>
+        </div>
+</script>
+
+
+
+
+
+
+<!--Template for app Page-->
+
+<script type="text/ng-template" id="/apps.html">
+
+        <div class="page-header">
+          <h3>
+           {{app.name}}
+          </h3>
+        </div>
+
+
+  <!-- TODO: change these links to reflect new app layout - app doesnt contain tets etc -->
+        <div ng-repeat="test in app.tests | orderBy:'name'">
+          <span>
+              {{test.name}} - Created at {{test.created}}
+
               <span ng-show="isLoggedIn()" > <a href="#/tests/{{test._id}}">Results</a> </span>
               <span ng-show="isLoggedIn()" ng-click="runTest(test)"> <button type="submit">Run Now</button> </span>
 
@@ -71,6 +115,21 @@
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
  <!--Template for Test Pages-->
 <script type="text/ng-template" id="/tests.html">
   <div class="page-header">
@@ -93,6 +152,7 @@
   </div>
 
 </script>
+
 
 
 
@@ -137,6 +197,9 @@
     <button type="submit" class="btn btn-primary">Register</button>
   </form>
 </script>
+
+
+
 
 
 <!-- Template for Login -->

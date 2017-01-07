@@ -16,17 +16,32 @@ app.config([
 function($stateProvider, $urlRouterProvider) {
 
   $stateProvider
+
+    // The home state, displays list of all apps
     .state('home', {
       url: '/home',
       templateUrl: '/home.html',
       controller: 'MainCtrl',
       resolve: {
-        postPromise: ['tests', function(tests){
-          return tests.getAll();
+        postPromise: ['apps', function(apps){
+          return apps.getAll();
         }]
       }
     })
 
+    // The apps state, displays the selected "app", and lists tests for the app.
+    .state('apps', {
+      url: '/apps/{id}',
+      templateUrl: '/apps.html',
+      controller: 'AppsCtrl',
+      resolve: {
+        app: ['$stateParams', 'apps', function($stateParams, apps) {
+          return apps.get($stateParams.id);
+        }]
+      }
+    })
+
+    // The apps state, displays the selected "test", and lists results for the test.
     .state('tests', {
       url: '/tests/{id}',
       templateUrl: '/tests.html',
@@ -38,6 +53,7 @@ function($stateProvider, $urlRouterProvider) {
       }
     })
 
+    // Display the login page
     .state('login', {
       url: '/login',
       templateUrl: '/login.html',
@@ -49,6 +65,7 @@ function($stateProvider, $urlRouterProvider) {
       }]
     })
 
+    // Display the registration page
     .state('register', {
       url: '/register',
       templateUrl: '/register.html',
@@ -65,6 +82,38 @@ function($stateProvider, $urlRouterProvider) {
 
 
 
+/* Apps Factory (A kind of service)   */
+app.factory('apps', ['$http', 'auth', function($http, auth){
+  var o = {
+    apps: []
+  };
+
+  // Get a single app by id
+  o.get = function(id) {
+    return $http.get('/apps/' + id).then(function(res){
+      return res.data;
+    });
+  };
+
+  // Return all apps
+  o.getAll = function() {
+    return $http.get('/apps').success(function(data){
+      angular.copy(data, o.apps);
+    });
+  };
+
+  // Create a new app in the db
+  o.create = function(app) {
+    return $http.post('/apps', app).success(function(data){
+      o.apps.push(data);
+    });
+  };
+
+  return o;
+}]);
+
+
+
 /* Tests Factory (A kind of service)
 What we're doing here is creating a new object that has an array property 
 called tests. We then return that variable so that our o object essentially 
@@ -75,26 +124,28 @@ app.factory('tests', ['$http', 'auth', 'Upload', function($http, auth, Upload){
     tests: []
   };
 
+  // Get a single test by id
   o.get = function(id) {
     return $http.get('/tests/' + id).then(function(res){
       return res.data;
     });
   };
 
+  // Return all tests
   o.getAll = function() {
     return $http.get('/tests').success(function(data){
       angular.copy(data, o.tests);
     });
   };
 
-
-  o.create = function(uploadData) {
+  // Create a new test, including file upload, for a particular app
+  o.create = function(uploadData, app) {
      Upload.upload({
-      url: '/tests',
+      url: '/apps/' + app._id + '/tests',
       method: 'post',
       data: uploadData
     }).then(function (response) {
-      o.tests.push(response.data);
+      app.tests.push(response.data);
     });
   };
 
@@ -126,25 +177,42 @@ app.factory('tests', ['$http', 'auth', 'Upload', function($http, auth, Upload){
 
 
 
-
-
 /* Main application controller - injects the tests factory service */
 app.controller('MainCtrl', [
 '$scope', 
-'tests',
+'apps',
 'auth',
 'Upload',
-function($scope, tests, auth, Upload){
+function($scope, apps, auth, Upload){
 
-  $scope.tests = tests.tests;
+  $scope.apps = apps.apps;
+  $scope.isLoggedIn = auth.isLoggedIn;
+
+  $scope.addApp = function(){
+    apps.create({
+      name: $scope.name,
+      description: $scope.description,
+      created: Date.now(),
+      owner:  null, //TODO: make this the logged in user, auth.currentUser didnt work
+    });
+    $scope.name = '';
+    $scope.description = '';
+  };
+}]);
+
+
+/* App page controller */
+app.controller('AppsCtrl', [
+'$scope',
+'tests',
+'app',
+'auth',
+function($scope, tests, app, auth){
+  $scope.app = app;
   $scope.isLoggedIn = auth.isLoggedIn;
 
   $scope.uploadTest = function(){
-    var uploadData = $scope.upload;
-    tests.create($scope.upload);
-    // TODO: If these are enabled, they get reset before file
-    // $scope.upload.name = '';
-    // $scope.upload.file = '';
+    tests.create($scope.upload, app);
   };
 
   $scope.runTest = function(test) {
@@ -152,12 +220,6 @@ function($scope, tests, auth, Upload){
   };
 
 }]);
-
-
-
-
-
-
 
 
 /* Test page controller */
@@ -174,13 +236,8 @@ function($scope, tests, test, auth){
     tests.run(test);
   };
 
+
 }]);
-
-
-
-
-
-
 
 
 
@@ -236,14 +293,6 @@ app.factory('auth', ['$http', '$window', function($http, $window){
 }]);
 
 
-
-
-
-
-
-
-
-
 app.controller('AuthCtrl', [
 '$scope',
 '$state',
@@ -267,6 +316,8 @@ function($scope, $state, auth){
     });
   };
 }]);
+
+
 
 app.controller('NavCtrl', [
 '$scope',

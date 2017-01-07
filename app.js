@@ -29,6 +29,7 @@ MongoDB.once('open', function () {
 require('./models/Tests');
 require('./models/Results')
 require('./models/Users');
+require('./models/Apps');
 require('./config/passport');
 
 var routes = require('./routes/index');
