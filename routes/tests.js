@@ -27,6 +27,8 @@ router.get('/:test', function(req, res, next) {
   });
 });
 
+
+
 /* "Run" a test (CREATE a result) --Is post correct? Get? put??,
     or maybe this calls another route when the result is actually generated? 
 */
@@ -49,42 +51,37 @@ router.post('/:test/run', auth, function(req, res, next) {
       }
 
 
-      // If no error : print the output streams...
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
-
-      var d = new Date();
+      // // If no error : print the output streams... for debugging
+      // console.log('stdout: ' + stdout);
+      // console.log('stderr: ' + stderr);
 
       // If stderr is empty - then the test passed! (FOR NOW!! TODO)
       var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? 'SUCCESS' : 'FAIL';
 
-      var testResult = {
-                    time: d.toUTCString(),
+      var d = new Date();
+
+      var result = new Result({
+                    timestamp: d.toUTCString(),
                     passed: didPass,
-                    stdout: stdout,
-                    stderr: stderr
-                    };
+                    output: stdout,
+                    error: stderr
+                    });
 
-      res.json(testResult);
+      // Create a result record in db
+      result.save(function(err, result){
+        if(err){ return next(err); }
 
-    });
-  });
-});
+        // If the result was created then push it to the test
+        req.test.results.push(result);
 
-/* Add a result to a test */
-router.post('/:test/results', function(req, res, next) {
-  console.log(req.body);
-  var result = new Result(req.body);
-  result.test = req.test; // ???
+        // And save the test
+        req.test.save(function(err, test) {
+          if(err){ return next(err); }
 
-  result.save(function(err, result){
-    if(err){ return next(err); }
-
-    req.test.results.push(result);
-    req.test.save(function(err, test) {
-      if(err){ return next(err); }
-
-      res.json(result);
+          // if test saved ok return the result json
+          res.json(result);
+        });
+      });
     });
   });
 });

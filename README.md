@@ -2,7 +2,8 @@
 
 ### Setup
 ##### 1. Install NodeJS - Google it
-##### 2. Install MongoDB - Google it (use npm method once node is installed)
+##### 2. Install MongoDB - https://docs.mongodb.com/manual/installation/
+##### 3. Make sure Mongo is setup, may have to setup your data path.
 
 ### Run
 ##### 1. Start mongoDB running on your machine - run "mongod &" from the command line. 
