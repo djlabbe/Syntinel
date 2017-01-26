@@ -33,8 +33,8 @@ require('./models/Apps');
 require('./config/passport');
 
 var routes = require('./routes/index');
-var users = require('./routes/users');
-
+var apps = require('./routes/apps');
+var tests = require('./routes/tests');
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -49,7 +49,8 @@ app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(passport.initialize());
 app.use('/', routes);
-app.use('/users', users);
+app.use('/apps', apps);
+app.use('/tests', tests);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

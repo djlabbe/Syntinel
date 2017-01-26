@@ -8,9 +8,5 @@ var TestSchema = new mongoose.Schema({
   results: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Result' }]
 });
 
-TestSchema.methods.run = function(cb) {
-  this.status = "OK";
-  this.save(cb);
-};
 
 mongoose.model('Test', TestSchema);

@@ -81,7 +81,6 @@ function($stateProvider, $urlRouterProvider) {
 }]);
 
 
-
 /* Apps Factory (A kind of service)   */
 app.factory('apps', ['$http', 'auth', function($http, auth){
   var o = {
@@ -150,22 +149,33 @@ app.factory('tests', ['$http', 'auth', 'Upload', function($http, auth, Upload){
   };
 
 
-  o.addResult = function(id, result) {
-    return $http.post('/tests/' + id + '/results', result);
-  };
+ // Run a test :
+ // 1. Make an http post request to /tests/:id/run
+ // 2. The server looks up the test in Mongo, and retrieves the path to the test script.
+ // 3. The server sets the file permissions and executes the script.
+ // 4. If the script executes, the server returns an object containing results of the script run.
+ //    (time, didPass?, stdout, stderr)
+ // 5. Now we are at the first .success() below...
+ //    Once we get the result information, we make a post request to /tests/:id/results
+ // 6. Server creates a Mongo record of the result and saves it, and saves the updated test. Finally it returns the result.
+ // 7. Once we know Mongo is updated successfully we push the result to our test's results array.
 
+ // TODO : Is there a (better) way to do this? Might not need to make 2 REST calls.
+ // TODO2 : If the SHELL SCRIPT ITSELF does not run. (IE: does not compile) then the server generates an error, but
+ //         right now the user is not made aware. IF the script generates output to stderr, then it is handled, and we log
+ //         a failed test. All of this will change with real tests anyway...
+ 
   o.run = function(test) {
-  return $http.put('/tests/' + test._id + '/run', null, {
+  return $http.post('/tests/' + test._id + '/run', null, {
     headers: {Authorization: 'Bearer '+auth.getToken()}
   })
     .success(function(data){
-      test.status = "OK";
-      var d = new Date();
-      o.addResult(test._id, {
-        timestamp: d.toUTCString(),
-        passed: 'true',
-        error: null
-    })
+      $http.post('/tests/' + test._id + '/results', {
+        timestamp: data.time,
+        passed: data.passed,
+        output: data.stdout,
+        error: data.stderr
+      })
       .success(function(result) {
         test.results.push(result);
       });

@@ -2,6 +2,7 @@
 <head>
   <title>Syntinel</title>
   <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+  <link href="/stylesheets/style.css" rel="stylesheet">
   <script src="/javascripts/angular.min.js"></script>
   <script src="/javascripts/angular-ui-router.js"></script>
   <script src="/javascripts/angularApp.js"></script>
@@ -106,24 +107,10 @@
         </div>
 
 
-
-
         <div ng-hide="isLoggedIn()">
           <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can upload a test.</h3>
         </div>
 </script>
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -138,8 +125,13 @@
     </h3>
   </div>
 
+
   <div ng-repeat="result in test.results">
-     Ran at {{result.timestamp}}. Success = {{result.passed}}. Error code = {{result.error}}
+     <h4>{{result.timestamp}} | <span ng-class="result.passed"}">{{result.passed}}</span></h4>
+     <h5>Output:</h5>
+     <p style="white-space: pre;">{{result.output}}</p> <!--white-space:pre to preserve formatting (ie \n's)-->
+     <h5 style="color:red";>Errors:</h5>
+     <p style="white-space: pre;">{{result.error}}</p>
   </div>
 
 
