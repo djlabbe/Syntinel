@@ -6,6 +6,7 @@
 ##### 3. Make sure Mongo is setup, may have to setup your data path.
 
 ### Run
-##### 1. Start mongoDB running on your machine - run "mongod &" from the command line. 
+##### 1. Start mongoDB running on your machine 
+###### (Run "mongod &" from the command line on mac, or open the .exe on a pc)
 ##### 2. From the root project directory ( where app.js lives) run "npm start".
-##### 3. In the browser go to "http://localhost:3000/"
+##### 3. Open a browser, go to "http://localhost:3000/"
