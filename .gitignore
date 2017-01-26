@@ -1,3 +1,5 @@
+# Taken from http://meanjs.org template #
+
 # OS
 # ===========
 .DS_Store
@@ -79,3 +81,8 @@ mongod
 *.ntvs*
 *.njsproj
 *.sln
+
+# SYNTINEL SPECIFIC
+# =================
+tests/
+
