@@ -14,7 +14,7 @@ angular.module('syntinel')
         name: $scope.name,
         description: $scope.description,
         created: Date.now(),
-        owner:  null, //TODO: make this the logged in user, auth.currentUser didnt work
+        owner:  auth.currentUser(), // This is just a String, not a User
       });
       $scope.name = '';
       $scope.description = '';

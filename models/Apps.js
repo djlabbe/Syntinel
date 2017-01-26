@@ -4,7 +4,7 @@ var AppSchema = new mongoose.Schema({
   name: String,
   description: String,
   created: Date,
-  owner:  { type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+  owner:  String,
   tests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Test' }]
 });
 

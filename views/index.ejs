@@ -46,11 +46,12 @@
         <div class="page-header">
           <h1>Syntinel</h1>
         </div>
-        <h3>Apps</h3>
+        <h2>APPS</h2>
         <div ng-repeat="app in apps | orderBy:'name'">
-          <span>
-             <a style="font-size: 20px" href="#/apps/{{app._id}}"> {{app.name}} </a> {{app.description}}
+          <span style="font-size: 14px">
+             <a style="font-size: 20px" href="#/apps/{{app._id}}"> {{app.name}} </a> created by <strong style="font-size: 20px">{{app.owner}}</strong>
           </span>
+          <p style="font-size: 12px"> {{app.description}} </p>
         </div>
 
 
