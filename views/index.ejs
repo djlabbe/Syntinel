@@ -14,6 +14,7 @@
   <script src="/javascripts/services/auth.js"></script>
   <script src="/javascripts/services/tests.js"></script>
   <script src="/javascripts/services/apps.js"></script>
+  <script src="/javascripts/services/scheduler.js"></script>
   <script src="/javascripts/vendor/ng-file-upload-all.min.js"></script>
 </head>
 
@@ -44,9 +45,8 @@
 <script type="text/ng-template" id="/home.html">
 
         <div class="page-header">
-          <h1>Syntinel</h1>
+          <h1>Syntinel | My Apps</h1>
         </div>
-        <h2>APPS</h2>
         <div ng-repeat="app in apps | orderBy:'name'">
           <span style="font-size: 14px">
              <a style="font-size: 20px" href="#/apps/{{app._id}}"> {{app.name}} </a> created by <strong style="font-size: 20px">{{app.owner}}</strong>
@@ -84,16 +84,14 @@
 <script type="text/ng-template" id="/apps.html">
 
         <div class="page-header">
-          <h3>
-           {{app.name}}
-          </h3>
+          <h1>{{app.name}} | Tests</h1>
         </div>
 
 
   <!-- TODO: change these links to reflect new app layout - app doesnt contain tets etc -->
         <div ng-repeat="test in app.tests | orderBy:'name'">
           <span>
-              {{test.name}} - Created at {{test.created}}
+              {{test.name}} - Run every --> {{test.frequency}}
 
               <span ng-show="isLoggedIn()" > <a href="#/tests/{{test._id}}">Results</a> </span>
               <span ng-show="isLoggedIn()" ng-click="runTest(test)"> <button type="submit">Run Now</button> </span>
@@ -129,9 +127,7 @@
  <!--Template for Test Pages-->
 <script type="text/ng-template" id="/tests.html">
   <div class="page-header">
-    <h3>
-        {{test.name}}
-    </h3>
+    <h1>{{test.name}} | Results</h1>
   </div>
 
 
@@ -160,7 +156,7 @@
 <!-- Template for Register -->
 <script type="text/ng-template" id="/register.html">
   <div class="page-header">
-    <h1>Syntinel</h1>
+    <h1>Syntinel | Registration</h1>
   </div>
 
   <div ng-show="error" class="alert alert-danger row">
@@ -206,7 +202,7 @@
 <!-- Template for Login -->
 <script type="text/ng-template" id="/login.html">
   <div class="page-header">
-    <h1>Syntinel</h1>
+    <h1>Syntinel | Login</h1>
   </div>
 
   <div ng-show="error" class="alert alert-danger row">

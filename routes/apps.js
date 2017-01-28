@@ -45,6 +45,7 @@ router.post('/:app/tests', upload.single('file'), function (req, res, next) {
     created: Date.now(),
     file: req.file,
     status: "NOTRUN",
+    frequency: 5000,
     results: []
   };
 
