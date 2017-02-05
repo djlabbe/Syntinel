@@ -8,5 +8,5 @@
 ### Run
 ##### 1. Start mongoDB running on your machine 
 ###### (Run "mongod &" from the command line on mac, or open the .exe on a pc)
-##### 2. From the root project directory ( where app.js lives) run "npm start".
+##### 2. From the root project directory ( where index.js lives) run "npm start".
 ##### 3. Open a browser, go to "http://localhost:3000/"

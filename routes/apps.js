@@ -1,6 +1,5 @@
 var express = require('express');
 var router = express.Router();
-var fs = require('fs');
 var mongoose = require('mongoose');
 var passport = require('passport');
 var jwt = require('express-jwt');
@@ -16,16 +15,15 @@ var App = mongoose.model('App');
 
 
 /* Get all apps */
-router.get('/', function(req, res, next) {
+router.get('/app/getAll', function(req, res, next) {
   App.find(function(err, apps){
     if(err){ return next(err); }
-
     res.json(apps);
   });
 });
 
 /* Save a new app */
-router.post('/', function(req, res, next) {
+router.post('/app/save', function(req, res, next) {
   var app = new App(req.body);
 
   app.save(function(err, app){
@@ -36,7 +34,7 @@ router.post('/', function(req, res, next) {
 });
 
 /* Save a new test, update the app*/
-router.post('/:app/tests', upload.single('file'), function (req, res, next) {
+router.post('/app/:app/tests', upload.single('file'), function (req, res, next) {
   console.log(req.body);
   console.log(req.file);
 
@@ -50,7 +48,7 @@ router.post('/:app/tests', upload.single('file'), function (req, res, next) {
   };
 
   var test = new Test(testData);
-  
+
   test.save(function (err, test) {
     if (err) {return next(err); }
 
@@ -65,7 +63,7 @@ router.post('/:app/tests', upload.single('file'), function (req, res, next) {
 
 
 /* Retrieve tests along with apps */
-router.get('/:app', function(req, res, next) {
+router.get('/app/:app', function(req, res, next) {
   req.app.populate('tests', function(err, app) {
     if (err) { return next(err); }
 

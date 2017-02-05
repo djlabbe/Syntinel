@@ -1,0 +1,54 @@
+<div>
+    <div class="container form-box">
+        <nav class="navbar navbar-default body-navbar">
+            <div class="container-fluid">
+                <div class="pull-left">
+                    <h3 translate>Upload Products</h3>
+                </div>
+            </div>
+        </nav>
+        <form class="form-horizontal">
+            <div class="pad-top-medium">
+                <div class="form-group">
+                    <label class="control-label col-md-2">Product Name</label>
+                    <div class="col-md-10">
+                        <input type="text"
+                               class="form-control"
+                               ng-model="$ctrl.product.name"
+                               placeholder="Product Name" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Product Description</label>
+                    <div class="col-md-10">
+                        <input type="text"
+                               class="form-control"
+                               ng-model="$ctrl.product.description"
+                               placeholder="Product Description" />
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="control-label col-md-2">Product Category</label>
+                    <div class="col-md-10">
+                        <select class="form-control"
+                                ng-model="$ctrl.product.category"
+                                ng-options="category as category.label for category in $ctrl.categories">
+                            <option value="">-- category --</option>
+                        </select>
+                        <!--<button tooltip-placement="{{placement.selected}}"-->
+                        <!--uib-tooltip="On the {{placement.selected}}"-->
+                        <!--type="button"-->
+                        <!--class="btn btn-default">Tooltip {{placement.selected}}</button>-->
+                    </div>
+                </div>
+                <div class="form-actions pull-right">
+                    <div style="text-align: center;">
+                        <button type="button"
+                                class="btn btn-primary"
+                                ng-click="$ctrl.continue();">Continue</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+</div>
