@@ -10,12 +10,14 @@
         var vm = this;
 
         vm.menuTree = [{
-            label: 'Import',
+            label: 'Add',
             sref: false,
-            submenu: [{
-                label: 'Scripts',
-                sref: 'importModal'
+            subMenu: [{
+                label: 'Application',
+                sref: 'importApp'
             }, {
+                label: 'Test',
+                sref: 'importTest'
             }]
         },{
             label: 'Applications',

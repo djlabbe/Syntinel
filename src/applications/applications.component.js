@@ -7,7 +7,7 @@
             templateUrl: 'src/applications/applications.tmpl.html',
             controller: applicationsCtrl
         });
-    function applicationsCtrl(applicationSvc, $location, $scope){
+    function applicationsCtrl(applicationSvc, $location, $scope, $state){
         var vm = this;
         vm.gridOptions = {};
 
@@ -15,7 +15,7 @@
             {
                 field:'name',
                 displayName:'Name',
-                cellTemplate: '<div ng-click="grid.appScope.test(row.entity)">{{row.entity.name}}</div>'
+                cellTemplate: '<div class="clickable" ng-click="grid.appScope.test(row.entity)">{{row.entity.name}}</div>'
             },{
                 field:'description',
                 displayName: 'Description'
@@ -38,6 +38,9 @@
         $scope.test = function(row){
             var url = '/tests/' + row._id;
             $location.path(url);
+        }
+        vm.addTest = function(){
+            $state.go('addTest');
         }
     }
 }());

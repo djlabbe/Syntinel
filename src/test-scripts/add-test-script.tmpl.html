@@ -1,0 +1,55 @@
+<div class="panel panel-default modal-panel">
+    <div class="modal-header panel-heading">
+        <span class="pull-left">Import Test File</span>
+        <span class="close" ng-click="vm.cancelForm()">
+            <i class="fa fa-times"></i>
+        </span>
+    </div>
+</div>
+<form class="form-horizontal" ng-submit="$event.preventDefault()" name="importForm">
+    <div class="modal-body">
+        <div class="form-group">
+            <label class="col-md-3 control-label">Import Test Script</label>
+            <div class="col-md-6">
+                <div class="fileinput fileinput-new" data-provides="fileinput">
+                    <span class="btn btn-default btn-file">
+                        <span>Choose files</span>
+                        <input type="file" id="files" multiple />
+                    </span>
+                    <span class="fileinput-filename"></span>
+                    <span class="fileinput-new">No file chosen</span>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Application</label>
+            <div class="col-md-6">
+                <input class="form-control" type="text" placeholder="Application Name" autofocus
+                       ng-model="vm.applicationName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">NickName</label>
+            <div class="col-md-6">
+                <input class="form-control" type="text" placeholder="Application Nickname"
+                       ng-model="vm.testNickName"/>
+            </div>
+        </div>
+        <div class="form-group">
+            <label class="col-md-3 control-label">Schedule</label>
+            <div class="col-md-6">
+                <div class="input-group date">
+                    <input class="form-control" type="text" placeholder="Date and Time"
+                           ng-model="vm.testSchedule"/>
+                    <span class="input-group-addon">
+                        <span class="fa fa-calendar"> </span>
+                    </span>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="modal-footer">
+        <button class="btn btn-primary" ng-click="vm.saveTests()">Save</button>
+        <button class="btn btn-warning" ng-click="vm.resetForm()">Reset</button>
+    </div>
+</form>

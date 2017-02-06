@@ -10,7 +10,8 @@
             'ui.grid.selection',
             'ui.grid.edit',
             'applications',
-            'core'
+            'core',
+            'testScripts'
         ])
         .config(configureApp);
 

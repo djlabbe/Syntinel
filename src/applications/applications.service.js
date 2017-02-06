@@ -13,9 +13,16 @@
 
         // Get a single app by id
         function getApp(id) {
-            return $http.get('app/apps/' + id).then(function (res) {
-                return res.data;
+            var deferred = $q.defer();
+            $http({
+                url: "/app/" + id,
+                method: "GET"
+            }).then(function(data){
+                deferred.resolve(data);
+            }, function(err){
+                deferred.reject(err);
             });
+            return deferred.promise;
         }
 
         // Return all apps

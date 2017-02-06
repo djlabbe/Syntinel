@@ -1,13 +1,13 @@
 (function(){
     angular
-        .module('applications')
+        .module('testScripts')
         .component('manageTestsComp',{
-            templateUrl:'src/applications/test-scripts/manage-test-scripts.tmpl.html',
+            templateUrl:'src/test-scripts/manage-test-scripts.tmpl.html',
             controller: ManageScripts
         });
 
     /* @ngInject */
-    function ManageScripts(testScriptSvc, $stateParams){
+    function ManageScripts(applicationSvc, $stateParams){
         var vm = this;
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
@@ -25,8 +25,9 @@
                 displayName: 'Test Schedule'
             }
         ];
-        testScriptSvc.getTest($stateParams.id).then(function(scripts){
-            vm.gridOptions.data = scripts.data;
+        applicationSvc.getApp($stateParams.id).then(function(app){
+            vm.app = app.data;
+            vm.gridOptions.data = app.data.tests;
         });
 
     }

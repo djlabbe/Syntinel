@@ -1,7 +1,7 @@
 (function(){
     "use strict";
     angular
-        .module('applications')
+        .module('testScripts')
         .factory('testScriptSvc', TestScriptSvc);
 
     function TestScriptSvc($http, $q){
