@@ -2,10 +2,12 @@ var express = require('express');
 var path = require('path');
 var favicon = require('serve-favicon');
 var logger = require('morgan');
+
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var mongoose = require('mongoose');
 var passport = require('passport');
+var request = require('request');
 
 
 var app = express();
@@ -82,5 +84,33 @@ app.use(function(err, req, res, next) {
     error: {}
   });
 });
+
+
+
+/* Here, we really would like to run the code currently in the rest service
+   right here in the server, without sending a http request. 
+
+   Every X minutes:
+   -Query db for all tests set for X minutes // OR query for all APPS and FOR EACH APP:
+    -Run all tests
+   -Emit a socket.io event to notify the frontend that tests [FOR THAT APPLICATION (include app id in the event?)] have run.
+   -The testsController will listen for the socket.io event and refresh the scope when received.
+   */
+
+   
+
+var interval  = 5 * 1000;
+setInterval(function() {
+ request.get(
+    'http://localhost:3000/tests/run/5000',
+    function (error, response, body) {
+      if (error) { 
+        console.log(error) 
+      }
+    }
+);
+}, interval);
+
+
 
 module.exports = app;

@@ -16,13 +16,6 @@ angular.module('syntinel')
       });
     };
 
-    // // Return all tests
-    // o.getAll = function() {
-    //   return $http.get('/tests').success(function(data){
-    //     angular.copy(data, o.tests);
-    //   });
-    // };
-
     // Create a new test, including file upload, for a particular app
     o.create = function(uploadData, app) {
        Upload.upload({

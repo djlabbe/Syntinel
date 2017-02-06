@@ -14,7 +14,6 @@
   <script src="/javascripts/services/auth.js"></script>
   <script src="/javascripts/services/tests.js"></script>
   <script src="/javascripts/services/apps.js"></script>
-  <script src="/javascripts/services/scheduler.js"></script>
   <script src="/javascripts/vendor/ng-file-upload-all.min.js"></script>
 </head>
 
@@ -94,7 +93,7 @@
               {{test.name}} - Run every --> {{test.frequency}}
 
               <span ng-show="isLoggedIn()" > <a href="#/tests/{{test._id}}">Results</a> </span>
-              <span ng-show="isLoggedIn()" ng-click="runTest(test)"> <button type="submit">Run Now</button> </span>
+              <span ng-show="isLoggedIn()" ng-click="runTest(test)"> <button type="submit" class="btn btn-primary">Run Now</button> </span>
 
           </span>
         </div>
@@ -128,15 +127,23 @@
 <script type="text/ng-template" id="/tests.html">
   <div class="page-header">
     <h1>{{test.name}} | Results</h1>
+
+    <form ng-submit="runTest()" ng-show="isLoggedIn()">
+      <button type="submit" class="btn btn-primary">Run Test</button>
+    </form>
+     <div ng-hide="isLoggedIn()">
+       <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can run tests.</h3>
+    </div>
   </div>
 
-
-  <div ng-repeat="result in test.results">
-     <h4>{{result.timestamp}} | <span ng-class="result.passed"}">{{result.passed}}</span></h4>
-     <h5>Output:</h5>
-     <p style="white-space: pre;">{{result.output}}</p> <!--white-space:pre to preserve formatting (ie \n's)-->
-     <h5 style="color:red";>Errors:</h5>
-     <p style="white-space: pre;">{{result.error}}</p>
+  <div class="wrapper">
+    <div class="item" ng-repeat="result in test.results | orderBy : '-timestamp'">
+       <h4>{{result.timestamp | date:'medium'}} | <span ng-class="result.passed"}">{{result.passed}}</span></h4>
+       <h5>Output:</h5>
+       <p style="white-space: pre;">{{result.output}}</p> <!--white-space:pre to preserve formatting (ie \n's)-->
+       <h5 style="color:red";>Errors:</h5>
+       <p style="white-space: pre;">{{result.error}}</p>
+    </div>
   </div>
 
 
@@ -144,9 +151,7 @@
     <button type="submit" class="btn btn-primary">Run Test</button>
   </form>
 
-  <div ng-hide="isLoggedIn()">
-    <h3>You need to <a href="/#/login">Log In</a> or <a href="/#/register">Register</a> before you can run tests.</h3>
-  </div>
+ 
 
 </script>
 

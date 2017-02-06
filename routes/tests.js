@@ -50,7 +50,7 @@ router.get('/:test', function(req, res, next) {
 
 
 /* Run all tests schedule for 5000ms */
-router.post('/run/5000', function(req, res, next) { // Add auth back in
+router.get('/run/5000', function(req, res, next) { // Add auth back in
  
   var cursor = Test.find({}).cursor();
 
@@ -67,7 +67,6 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
         return next(error); 
       }
 
-
       // // If no error : print the output streams... for debugging
       // console.log('stdout: ' + stdout);
       // console.log('stderr: ' + stderr);
@@ -78,7 +77,7 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
       var d = new Date();
 
       var result = new Result({
-                    timestamp: d.toUTCString(),
+                    timestamp: d.getTime(),
                     passed: didPass,
                     output: stdout,
                     error: stderr
@@ -102,14 +101,14 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
 
 
 
-/* "Run" a test (CREATE a result) --Is post correct? Get? put??,
-    or maybe this calls another route when the result is actually generated? 
-*/
+
+
+/* "Run" a test (CREATE a result) */
 
 router.post('/:test/run', auth, function(req, res, next) {
   // retrieve the entire test object from the db
   Test.findById(req.params.test, function (err, test) {
-    console.log(test);
+
     if (err) { return next(err); }
       // Change the permissions to allow execute
     fs.chmod(test.file.path, 0777, function(err){
@@ -134,7 +133,7 @@ router.post('/:test/run', auth, function(req, res, next) {
       var d = new Date();
 
       var result = new Result({
-                    timestamp: d.toUTCString(),
+                    timestamp: d.getTime(),
                     passed: didPass,
                     output: stdout,
                     error: stderr
