@@ -4,7 +4,7 @@
         .module('testScripts')
         .factory('testScriptSvc', TestScriptSvc);
 
-    function TestScriptSvc($http, $q){
+    function TestScriptSvc($http, $q, Upload){
         var svc = {
             getTest: getTest,
             createTest: createTest,
@@ -25,13 +25,13 @@
             return deferred.promise;
         }
         function createTest(app, uploadData){
+
             var deferred = $q.defer();
             Upload.upload({
                 url: '/apps/' + app._id + '/tests',
                 method: 'post',
                 data: uploadData
             }).then(function (response) {
-                app.tests.push(response.data);
                 deferred.resolve(response);
             }, function(err){
                 deferred.resolve(err);

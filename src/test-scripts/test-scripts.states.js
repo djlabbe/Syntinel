@@ -13,7 +13,7 @@
                 component: 'manageTestsComp'
             })
             .state("addTest",{
-                url: "/addTest",
+                url: "/addTest/:appId",
                 template: '<add-test-comp></add-test-comp>',
                 component: 'addTestComp'
             });

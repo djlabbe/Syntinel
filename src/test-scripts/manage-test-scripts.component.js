@@ -7,7 +7,7 @@
         });
 
     /* @ngInject */
-    function ManageScripts(applicationSvc, $stateParams){
+    function ManageScripts(applicationSvc, $stateParams, $location){
         var vm = this;
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
@@ -29,6 +29,9 @@
             vm.app = app.data;
             vm.gridOptions.data = app.data.tests;
         });
-
+        vm.addTest = function(){
+            var url = '/addTest/' + vm.app._id;
+            $location.path(url);
+        }
     }
 }());

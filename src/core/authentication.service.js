@@ -4,7 +4,7 @@
         .module('core')
         .factory('authenticationSvc', AuthenticationSvc);
 
-    function AuthenticationSvc(){
+    function AuthenticationSvc($window, $http){
         var svc = {
             saveToken: saveToken,
             getToken: getToken,
@@ -14,6 +14,7 @@
             logIn: logIn,
             logOut: logOut
         };
+        return svc;
 
         function saveToken(token){
             $window.localStorage['syntinel-token'] = token;

@@ -3,7 +3,7 @@
         .module('applications')
         .factory('applicationSvc', ApplicationSvc);
 
-    function ApplicationSvc($http, $q) {
+    function ApplicationSvc($http, $q, authenticationSvc) {
         var svc = {
             getApp: getApp,
             getAllApps: getAllApps,
@@ -41,9 +41,23 @@
 
         // Create a new app in the db
         function createApp(app) {
-            return $http.post('app/apps', app).success(function (data) {
-                o.apps.push(data);
+            if(!app.created){
+                app.date = Date.now()
+            }
+            if(!app.owner){
+                app.owner = authenticationSvc.currentUser();
+            }
+            var deferred = $q.defer();
+            $http({
+                url: "/app/save",
+                method: "POST",
+                data: app
+            }).then(function(data){
+                deferred.resolve(data);
+            }, function(err){
+                deferred.reject(err);
             });
+            return deferred.promise;
         }
     }
 }());

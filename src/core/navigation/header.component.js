@@ -14,7 +14,7 @@
             sref: false,
             subMenu: [{
                 label: 'Application',
-                sref: 'importApp'
+                sref: 'addApplication'
             }, {
                 label: 'Test',
                 sref: 'addTest'
