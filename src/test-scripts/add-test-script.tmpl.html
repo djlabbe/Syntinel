@@ -1,7 +1,7 @@
 <div class="panel panel-default modal-panel">
     <div class="modal-header panel-heading">
         <span class="pull-left">Import Test File</span>
-        <span class="close" ng-click="vm.cancelForm()">
+        <span class="close" ng-click="$ctrl.cancelForm()">
             <i class="fa fa-times"></i>
         </span>
     </div>
@@ -25,14 +25,14 @@
             <label class="col-md-3 control-label">Application</label>
             <div class="col-md-6">
                 <input class="form-control" type="text" placeholder="Application Name" autofocus
-                       ng-model="vm.applicationName"/>
+                       ng-model="$ctrl.applicationName"/>
             </div>
         </div>
         <div class="form-group">
             <label class="col-md-3 control-label">NickName</label>
             <div class="col-md-6">
                 <input class="form-control" type="text" placeholder="Application Nickname"
-                       ng-model="vm.testNickName"/>
+                       ng-model="$ctrl.testNickName"/>
             </div>
         </div>
         <div class="form-group">
@@ -40,7 +40,7 @@
             <div class="col-md-6">
                 <div class="input-group date">
                     <input class="form-control" type="text" placeholder="Date and Time"
-                           ng-model="vm.testSchedule"/>
+                           ng-model="$ctrl.testSchedule"/>
                     <span class="input-group-addon">
                         <span class="fa fa-calendar"> </span>
                     </span>
@@ -49,7 +49,7 @@
         </div>
     </div>
     <div class="modal-footer">
-        <button class="btn btn-primary" ng-click="vm.saveTests()">Save</button>
-        <button class="btn btn-warning" ng-click="vm.resetForm()">Reset</button>
+        <button class="btn btn-primary" ng-click="$ctrl.saveTests()">Save</button>
+        <button class="btn btn-warning" ng-click="$ctrl.resetForm()">Reset</button>
     </div>
 </form>

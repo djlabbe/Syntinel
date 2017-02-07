@@ -17,7 +17,7 @@
                 sref: 'importApp'
             }, {
                 label: 'Test',
-                sref: 'importTest'
+                sref: 'addTest'
             }]
         },{
             label: 'Applications',

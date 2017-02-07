@@ -38,7 +38,7 @@
         $scope.test = function(row){
             var url = '/tests/' + row._id;
             $location.path(url);
-        }
+        };
         vm.addTest = function(){
             $state.go('addTest');
         }

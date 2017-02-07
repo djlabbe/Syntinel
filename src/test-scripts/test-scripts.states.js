@@ -14,14 +14,8 @@
             })
             .state("addTest",{
                 url: "/addTest",
-                onEnter: function($uibModal, $state){
-                    $uibModal.open({
-                        templateUrl: 'src/test-scripts/add-test-script.tmpl.html',
-                        controller: 'addTestCtrl as vm'
-                    }).result.finally(function(){
-                        $state.go('applications');
-                    });
-                }
+                template: '<add-test-comp></add-test-comp>',
+                component: 'addTestComp'
             });
     }
 }());
