@@ -24,15 +24,15 @@
             });
             return deferred.promise;
         }
-        function createTest(app, uploadData){
-
+        function createTest(app, test){
             var deferred = $q.defer();
             Upload.upload({
                 url: '/apps/' + app._id + '/tests',
-                method: 'post',
-                data: uploadData
+                method: 'POST',
+                data: test
             }).then(function (response) {
-                deferred.resolve(response);
+                app.test.push(test);
+                deferred.resolve(response.data);
             }, function(err){
                 deferred.resolve(err);
             });

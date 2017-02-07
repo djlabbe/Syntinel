@@ -11,9 +11,12 @@
         <div class="form-group">
             <label class="col-md-3 control-label">Import Test Script</label>
             <div class="col-md-6">
-                    <div class="button"
-                         ngf-select
-                         ng-model="$ctrl.test.file">Select File</div>
+                <input type="file"
+                       name="file"
+                       id="file"
+                       ng-model="$ctrl.test.file"
+                       ngf-select
+                       ngf-max-size="25MB" required/>
                 </div>
             </div>
         </div>
@@ -21,7 +24,7 @@
             <label class="col-md-3 control-label">Application</label>
             <div class="col-md-6">
                 <input class="form-control" type="text" placeholder="Application Name" autofocus
-                       ng-model="$ctrl.test.appName"/>
+                       ng-model="$ctrl.app.name"/>
             </div>
         </div>
         <div class="form-group">
@@ -31,19 +34,18 @@
                        ng-model="$ctrl.test.name"/>
             </div>
         </div>
-        <div class="form-group">
-            <label class="col-md-3 control-label">Schedule</label>
-            <div class="col-md-6">
-                <div class="input-group date">
-                    <input class="form-control" type="text" placeholder="Date and Time"
-                           ng-model="$ctrl.test.schedule"/>
-                    <span class="input-group-addon">
-                        <span class="fa fa-calendar"> </span>
-                    </span>
-                </div>
-            </div>
-        </div>
-    </div>
+        <!--<div class="form-group">-->
+            <!--<label class="col-md-3 control-label">Schedule</label>-->
+            <!--<div class="col-md-6">-->
+                <!--<div class="input-group date">-->
+                    <!--<input class="form-control" type="text" placeholder="Date and Time"-->
+                           <!--ng-model="$ctrl.test.schedule"/>-->
+                    <!--<span class="input-group-addon">-->
+                        <!--<span class="fa fa-calendar"> </span>-->
+                    <!--</span>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
     <div class="modal-footer">
         <button class="btn btn-primary" ng-click="$ctrl.saveTest()">Save</button>
         <button class="btn btn-warning" ng-click="$ctrl.resetForm()">Reset</button>
