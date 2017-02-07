@@ -6,7 +6,7 @@
             templateUrl: 'src/core/navigation/header.tmpl.html',
             controller: headerCtrl
         });
-    function headerCtrl(){
+    function headerCtrl(authenticationSvc, $state){
         var vm = this;
 
         vm.menuTree = [{
@@ -26,5 +26,14 @@
             label: 'Scripts',
             sref: 'allTestScripts'
         }];
+
+        vm.userLoggedIn = authenticationSvc.isLoggedIn();
+        vm.userLogOut = function(){
+            authenticationSvc.logOut().error(function(error){
+                vm.error = error;
+            }).then(function(){
+                $state.go('userLogin');
+            });
+        }
     }
 }());

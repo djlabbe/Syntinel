@@ -46,13 +46,13 @@
         }
 
         function register(user){
-            return $http.post('/register', user).success(function(data){
+            return $http.post('/register', user).then(function(data){
                 svc.saveToken(data.token);
             });
         }
 
         function logIn(user){
-            return $http.post('/login', user).success(function(data){
+            return $http.post('/login', user).then(function(data){
                 svc.saveToken(data.token);
             });
         };

@@ -26,7 +26,7 @@
         }
         function createTest(app, test){
             var deferred = $q.defer();
-            Upload.upload({
+            $http({
                 url: '/apps/' + app._id + '/tests',
                 method: 'POST',
                 data: test

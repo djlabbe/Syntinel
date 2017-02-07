@@ -40,12 +40,8 @@
             <ul class="nav navbar-nav navbar-right"
                 ng-if="$ctrl.userLoggedIn">
                 <li><a>
-                    <span class="glyphicon glyphicon-user clickable"
-                          ui-sref="myProfile"> Profile </span>
-                </a></li>
-                <li><a>
                     <span class="glyphicon glyphicon-log-out clickable"
-                          ui-sref="browseAll"> Logout </span>
+                          ng-click="$ctrl.userLogOut()"> Logout </span>
                 </a></li>
             </ul>
         </div>
