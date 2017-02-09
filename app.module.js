@@ -13,11 +13,19 @@
             'core',
             'testScripts'
         ])
-        .config(configureApp);
+        .config(configureApp)
+        .run(runApp);
 
     /* @ngInject */
     function configureApp($urlRouterProvider) {
         $urlRouterProvider
-            .otherwise("applications");
+            .when("", "applications");
+    }
+    function runApp(authenticationSvc, $rootScope, $location){
+        $rootScope.$on("$stateChangeStart", function(evt){
+           if(!authenticationSvc.isLoggedIn()){
+               $location.path("/userLogin");
+           }
+        });
     }
 }());

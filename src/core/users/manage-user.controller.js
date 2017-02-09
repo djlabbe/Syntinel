@@ -4,22 +4,24 @@
         .module('core')
         .controller('manageUserCtrl', ManageUserCtrl);
 
-    function ManageUserCtrl(authenticationSvc, $state){
+    function ManageUserCtrl(authenticationSvc, $state, $rootScope){
         var vm = this;
         vm.user = {};
 
-        vm.userRegister = function(){
-            authenticationSvc.register(vm.user).error(function(error){
-                vm.error = error;
-            }).then(function(){
+        vm.userRegistration = function(){
+            authenticationSvc.register(vm.user).then(function(){
+                $rootScope.user = user.data;
                 $state.go('applications');
+                $rootScope.$broadcast("userAuthentication", {
+                    user: true
+                });
             });
         };
-
         vm.userLogin = function(){
-            authenticationSvc.logIn(vm.user).error(function(error){
-                vm.error = error;
-            }).then(function(){
+            authenticationSvc.logIn(vm.user).then(function(){
+                $rootScope.$broadcast("userAuthentication", {
+                    user: true
+                });
                 $state.go('applications');
             });
         };

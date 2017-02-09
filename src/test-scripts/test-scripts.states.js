@@ -12,6 +12,11 @@
                 template: '<manage-tests-comp></manage-tests-comp>',
                 component: 'manageTestsComp'
             })
+            .state('allTests',{
+                url:'/allTests',
+                template:'<manage-tests-comp></manage-tests-comp>',
+                component: 'manageTestComp'
+            })
             .state("addTest",{
                 url: "/addTest/:appId",
                 template: '<add-test-comp></add-test-comp>',
