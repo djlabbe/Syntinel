@@ -7,7 +7,7 @@
         });
 
     /* @ngInject */
-    function ManageScripts(applicationSvc, $stateParams, $location){
+    function ManageScripts(applicationSvc, $stateParams, $location, $scope){
         var vm = this;
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
@@ -25,6 +25,9 @@
                 displayName: 'Test Schedule'
             }
         ];
+        vm.gridOptions.onRegisterApi = function(gridApi){
+            vm.gridApi = gridApi;
+        };
         applicationSvc.getApp($stateParams.id).then(function(app){
             vm.app = app.data;
             vm.gridOptions.data = app.data.tests;
@@ -32,6 +35,12 @@
         vm.addTest = function(){
             var url = '/addTest/' + vm.app._id;
             $location.path(url);
+        };
+        vm.runTest = function(){
+            var tests = vm.gridApi.selection.getSelectedRows();
+            test.forEach(function(test){
+
+            });
         }
     }
 }());

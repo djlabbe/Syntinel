@@ -13,38 +13,27 @@
         return svc;
 
         function getTest(id){
+            return $http
+                .get('/tests/' + id);
+        }
+        function createTest(app, test){
             var deferred = $q.defer();
-            $http({
-                url: '/tests/' + id,
-                method: "GET"
-            }).then(function(data){
-                deferred.resolve(data);
+            Upload.upload({
+                url: '/app/' + app._id + '/tests',
+                method: 'post',
+                data: test
+            }).then(function (response) {
+                deferred.resolve(response.data);
             }, function(err){
                 deferred.reject(err);
             });
             return deferred.promise;
         }
-        function createTest(app, test){
-            var deferred = $q.defer();
-            $http({
-                url: '/apps/' + app._id + '/tests',
-                method: 'POST',
-                data: test
-            }).then(function (response) {
-                app.test.push(test);
-                deferred.resolve(response.data);
-            }, function(err){
-                deferred.resolve(err);
-            });
-            return deferred.promise;
-        }
         function runTest(test){
-            return $http.post('/tests/' + test._id + '/run', null, {
-                headers: {Authorization: 'Bearer '+auth.getToken()}
-            })
-                .success(function(result){
-                    test.results.push(result);
-                });
+            return $http
+                .post('/tests/' + test._id + '/run', null, {
+                headers: {Authorization: 'Bearer ' + auth.getToken()}
+            });
         }
     }
 }());

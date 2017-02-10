@@ -18,7 +18,7 @@
         vm.saveTest = function(){
             if(vm.app && vm.test && vm.test.file){
                 testScriptSvc.createTest(vm.app, vm.test).then(function(){
-                    var url = '/application/' + vm.app._id;
+                    var url = '/tests/' + vm.app._id;
                     $location.path(url);
                 });
             }

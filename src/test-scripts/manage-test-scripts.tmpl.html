@@ -14,7 +14,7 @@
     </button>
     <button type="button"
             class="btn btn-primary"
-            ng-click="$ctrl.runTest(row)">
+            ng-click="$ctrl.runTest($ctrl.gridApi.selection.getSelectedRows())">
         Run Test
     </button>
 </div>

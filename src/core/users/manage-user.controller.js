@@ -10,7 +10,6 @@
 
         vm.userRegistration = function(){
             authenticationSvc.register(vm.user).then(function(){
-                $rootScope.user = user.data;
                 $state.go('applications');
                 $rootScope.$broadcast("userAuthentication", {
                     user: true
