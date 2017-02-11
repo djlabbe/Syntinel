@@ -22,8 +22,12 @@
             .when("", "applications");
     }
     function runApp(authenticationSvc, $rootScope, $location){
-        $rootScope.$on("$stateChangeStart", function(evt){
-           if(!authenticationSvc.isLoggedIn()){
+        $rootScope.$on("$stateChangeStart", function(evt, args){
+           var login = authenticationSvc.isLoggedIn();
+            $rootScope.$broadcast("userAuthentication",{
+                userLogin: login
+            });
+            if(!login){
                $location.path("/userLogin");
            }
         });

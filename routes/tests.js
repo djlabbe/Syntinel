@@ -15,9 +15,7 @@ var Test = mongoose.model('Test');
 var Result = mongoose.model('Result');
 var App = mongoose.model('App');
 
-var exec = require('child_process').exec;
-
-
+var exec = require('child_process').execFile;
 
 /* Get all tests */
 router.get('/test/', function(req, res, next) {
@@ -28,7 +26,6 @@ router.get('/test/', function(req, res, next) {
   });
 });
 
-
 /* Retrieve results along with tests (populate tests with results) */
 router.get('/test/:test', function(req, res, next) {
   req.test.populate('results', function(err, test) {
@@ -38,7 +35,6 @@ router.get('/test/:test', function(req, res, next) {
   });
 });
 
-
 /* TODO : Pull out the duplicated code here, look at adding all tests needing to
  be run to an ASYNCH QUEUE so that we know when the new result has been saved.
  Ideally, as an item leaves the queue, it will trigger an event emission, and the
@@ -47,7 +43,6 @@ router.get('/test/:test', function(req, res, next) {
 
  See: http://stackoverflow.com/questions/25507866/how-can-i-use-a-cursor-foreach-in-mongodb-using-node-js
  */
-
 
 /* Run all tests schedule for 5000ms */
 router.post('/run/5000', function(req, res, next) { // Add auth back in
@@ -100,12 +95,9 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
   });
 });
 
-
-
 /* "Run" a test (CREATE a result) --Is post correct? Get? put??,
     or maybe this calls another route when the result is actually generated? 
 */
-
 router.post('/test/:test/run', auth, function(req, res, next) {
   // retrieve the entire test object from the db
   Test.findById(req.params.test, function (err, test) {
@@ -161,7 +153,6 @@ router.post('/test/:test/run', auth, function(req, res, next) {
 
   });
 });
-
 
 /* Preload a TEST object by id */
 router.param('test', function(req, res, next, id) {

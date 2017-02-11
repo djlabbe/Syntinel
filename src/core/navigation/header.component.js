@@ -13,8 +13,7 @@
         getMenu();
 
         $rootScope.$on("userAuthentication", function(evt, args){
-            vm.user = args.user;
-            vm.userLoggedIn = true;
+            vm.userLoggedIn = args.userLogin;
             getMenu();
         });
         vm.userLoggedIn = authenticationSvc.isLoggedIn();
