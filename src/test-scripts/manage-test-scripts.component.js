@@ -7,13 +7,14 @@
         });
 
     /* @ngInject */
-    function ManageScripts(applicationSvc, $stateParams, $location, testScriptSvc){
+    function ManageScripts(applicationSvc, $stateParams, $location, testScriptSvc, $scope){
         var vm = this;
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
             {
                 field: 'name',
-                displayName: 'Name'
+                displayName: 'Name',
+                cellTemplate: '<div class="clickable" ng-click="grid.appScope.viewTest(row.entity)">{{row.entity.name}}</div>'
             }, {
                 field: 'status',
                 displayName: 'Status'
@@ -50,5 +51,9 @@
                 testScriptSvc.runTest(test);
             });
         };
+        $scope.viewTest = function(row){
+            var url = '/tests/test/' + row._id;
+            $location.path(url);
+        }
     }
 }());

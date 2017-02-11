@@ -16,6 +16,11 @@
                 url: "/addTest/:appId",
                 template: '<add-test-comp></add-test-comp>',
                 component: 'addTestComp'
+            })
+            .state('tests/test',{
+                url: '/tests/test/:testId',
+                template: '<view-test-comp></view-test-comp>',
+                component: 'viewTestComp'
             });
     }
 }());
