@@ -20,21 +20,21 @@ var exec = require('child_process').exec;
 
 
 /* Get all tests */
-router.get('/', function(req, res, next) {
+router.get('/test/', function(req, res, next) {
   Test.find(function(err, tests){
     if(err){ return next(err); }
 
-    res.json(tests);
+    return res.json(tests);
   });
 });
 
 
 /* Retrieve results along with tests (populate tests with results) */
-router.get('/:test', function(req, res, next) {
+router.get('/test/:test', function(req, res, next) {
   req.test.populate('results', function(err, test) {
     if (err) { return next(err); }
 
-    res.json(test);
+    return res.json(test);
   });
 });
 
@@ -106,27 +106,29 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
     or maybe this calls another route when the result is actually generated? 
 */
 
-router.post('/:test/run', auth, function(req, res, next) {
+router.post('/test/:test/run', auth, function(req, res, next) {
   // retrieve the entire test object from the db
   Test.findById(req.params.test, function (err, test) {
-    console.log(test);
-    if (err) { return next(err); }
-      // Change the permissions to allow execute
-    fs.chmod(test.file.path, 0777, function(err){
-      if(err) { return next(err); } 
-    });
-
     // Execute the script
+    console.log(test);
+    if (err) {
+      return next(err);
+    }
+
+      // Change the permissions to allow execute
+    fs.chmod(test.file.path, 755, function(err){
+      if(err) {
+        return next(err); }
+    });
     exec(test.file.path, function (error, stdout, stderr) {
-      if (error) { 
+      if (error) {
         console.log('exec error: ' + error);
         return next(error); 
       }
 
-
       // // If no error : print the output streams... for debugging
-      // console.log('stdout: ' + stdout);
-      // console.log('stderr: ' + stderr);
+      console.log('stdout: ' + stdout);
+      console.log('stderr: ' + stderr);
 
       // If stderr is empty - then the test passed! (FOR NOW!! TODO)
       var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? 'SUCCESS' : 'FAIL';
@@ -152,7 +154,7 @@ router.post('/:test/run', auth, function(req, res, next) {
           if(err){ return next(err); }
 
           // if test saved ok return the result json
-          res.json(result);
+          return res.json(result);
         });
       });
     });

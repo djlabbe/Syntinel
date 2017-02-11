@@ -5,18 +5,9 @@ var mongoose = require('mongoose');
 var passport = require('passport');
 var jwt = require('express-jwt');
 
-
-
 var User = mongoose.model('User');
 var auth = jwt({secret: 'SECRET', userProperty: 'payload'}); // Change 'SECRET'
                                                              // to env var
-
-
-/* Get home page. */
-router.get('/', function(req, res, next) {
-  res.render('index', { title: 'Express' });
-});
-
 
 /* Creates a user given a username and password */
 router.post('/register', function(req, res, next){
@@ -39,7 +30,7 @@ router.post('/login', function(req, res, next){
   if(!req.body.username || !req.body.password){
     return res.status(400).json({message: 'Please fill out all fields'});
   }
-
+  
   passport.authenticate('local', function(err, user, info){
     if(err){ return next(err); }
 

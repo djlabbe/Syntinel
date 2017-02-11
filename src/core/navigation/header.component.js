@@ -42,7 +42,7 @@
                     sref: 'applications'
                 },{
                     label: 'Scripts',
-                    sref: 'allTestScripts'
+                    sref: 'tests'
                 }];
             } else {
                 vm.menuTree = [];

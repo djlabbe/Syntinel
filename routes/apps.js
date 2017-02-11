@@ -18,7 +18,7 @@ var App = mongoose.model('App');
 router.get('/app/getAll', function(req, res, next) {
   App.find(function(err, apps){
     if(err){ return next(err); }
-    res.json(apps);
+    return res.json(apps);
   });
 });
 
@@ -28,8 +28,7 @@ router.post('/app/save', function(req, res, next) {
 
   app.save(function(err, app){
     if(err){ return next(err); }
-
-    res.json(app);
+    return res.json(app);
   });
 });
 
@@ -56,7 +55,7 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
     req.app.save(function(err, app) {
       if (err) {return next(err); }
 
-      res.json(test);
+      return res.json(test);
     });
   });
 });
@@ -67,7 +66,7 @@ router.get('/app/:app', function(req, res, next) {
   req.app.populate('tests', function(err, app) {
     if (err) { return next(err); }
 
-    res.json(app);
+    return res.json(app);
   });
 });
 

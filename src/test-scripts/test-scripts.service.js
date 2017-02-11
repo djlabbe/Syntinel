@@ -4,17 +4,22 @@
         .module('testScripts')
         .factory('testScriptSvc', TestScriptSvc);
 
-    function TestScriptSvc($http, $q, Upload){
+    function TestScriptSvc($http, $q, Upload, authenticationSvc){
         var svc = {
+            getAllTests: getAllTests,
             getTest: getTest,
             createTest: createTest,
             runTest: runTest
         };
         return svc;
 
+        function getAllTests(){
+            return $http
+                .get('/test/');
+        }
         function getTest(id){
             return $http
-                .get('/tests/' + id);
+                .get('/test/' + id);
         }
         function createTest(app, test){
             var deferred = $q.defer();
@@ -31,8 +36,8 @@
         }
         function runTest(test){
             return $http
-                .post('/tests/' + test._id + '/run', null, {
-                headers: {Authorization: 'Bearer ' + auth.getToken()}
+                .post('/test/' + test._id + '/run', null,
+                {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
         }
     }

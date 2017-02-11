@@ -7,7 +7,7 @@
         });
 
     /* @ngInject */
-    function ManageScripts(applicationSvc, $stateParams, $location, $scope){
+    function ManageScripts(applicationSvc, $stateParams, $location, testScriptSvc){
         var vm = this;
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
@@ -28,19 +28,27 @@
         vm.gridOptions.onRegisterApi = function(gridApi){
             vm.gridApi = gridApi;
         };
-        applicationSvc.getApp($stateParams.id).then(function(app){
-            vm.app = app.data;
-            vm.gridOptions.data = app.data.tests;
-        });
+        if($stateParams.id){
+        // Get tests for specific app
+            applicationSvc.getApp($stateParams.id).then(function(app){
+                vm.app = app.data;
+                vm.gridOptions.data = app.data.tests;
+            });
+        } else {
+        // Get all Tests
+            testScriptSvc.getAllTests().then(function(tests){
+                vm.gridOptions.data = tests.data;
+            });
+        }
         vm.addTest = function(){
             var url = '/addTest/' + vm.app._id;
             $location.path(url);
         };
         vm.runTest = function(){
             var tests = vm.gridApi.selection.getSelectedRows();
-            test.forEach(function(test){
-
+            tests.forEach(function(test){
+                testScriptSvc.runTest(test);
             });
-        }
+        };
     }
 }());
