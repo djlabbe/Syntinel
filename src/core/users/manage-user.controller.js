@@ -12,14 +12,14 @@
             authenticationSvc.register(vm.user).then(function(){
                 $state.go('applications');
                 $rootScope.$broadcast("userAuthentication", {
-                    user: true
+                    userLogin: true
                 });
             });
         };
         vm.userLogin = function(){
             authenticationSvc.logIn(vm.user).then(function(){
                 $rootScope.$broadcast("userAuthentication", {
-                    user: true
+                    userLogin: true
                 });
                 $state.go('applications');
             });

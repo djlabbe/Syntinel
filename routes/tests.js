@@ -15,7 +15,7 @@ var Test = mongoose.model('Test');
 var Result = mongoose.model('Result');
 var App = mongoose.model('App');
 
-var exec = require('child_process').execFile;
+var exec = require('child_process').exec;
 
 /* Get all tests */
 router.get('/test/', function(req, res, next) {
