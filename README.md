@@ -6,6 +6,7 @@
 ##### 3. Make sure Mongo is setup, may have to setup your data path.
 
 ### Run
+##### 0. Install dependencies 'npm install'
 ##### 1. Start mongoDB running on your machine 
 ###### (Run "mongod &" from the command line on mac, or open the .exe on a pc)
 ##### 2. From the root project directory ( where index.js lives) run "npm start".
