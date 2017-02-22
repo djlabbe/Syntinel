@@ -19,6 +19,7 @@ var exec = require('child_process').exec;
 
 /* Get all tests */
 router.get('/test/', function(req, res, next) {
+
   Test.find(function(err, tests){
     if(err){ return next(err); }
 
@@ -28,10 +29,24 @@ router.get('/test/', function(req, res, next) {
 
 /* Retrieve results along with tests (populate tests with results) */
 router.get('/test/:test', function(req, res, next) {
-  req.test.populate('results', function(err, test) {
-    if (err) { return next(err); }
 
-    return res.json(test);
+  req.test.populate('results', function(err, test) {
+
+    if (err) { return next(err); } else {
+
+        fs.readFile('tests/9cb30f2d698b1d410196a5eaa7ff7293', 'utf8', function (err,data) {
+            if (err) {
+                return console.log(err);
+            }
+            test.filecontents = data;
+
+            return res.json(test);
+        });
+
+    }
+
+
+
   });
 });
 
@@ -108,7 +123,7 @@ router.post('/test/:test/run', auth, function(req, res, next) {
     }
 
       // Change the permissions to allow execute
-    fs.chmod(test.file.path, 755, function(err){
+    fs.chmod(test.file.path, 0777, function(err){
       if(err) {
         return next(err); }
     });

@@ -4,11 +4,27 @@
         <span>{{$ctrl.test.name}}</span>
     </div>
     <div class="form-control">
-        <label>Test Results</label>
-        <span>{{$ctrl.test.results}}</span>
-    </div>
-    <div class="form-control">
         <label>Test Status</label>
         <span>{{$ctrl.test.status}}</span>
     </div>
+    <br>
+
+    <button class="btn btn-primary" data-toggle="collapse" data-target="#script">View Script</button>
+    <br>
+    <div id="script" class="collapse" style="background-color: #efefef">
+        <br>
+        <span>{{$ctrl.test.filecontents}}</span>
+        <br>
+        <br>
+    </div>
+
+    <br>
+
+    <button class="btn btn-primary" data-toggle="collapse" data-target="#results">View Results</button>
+    <br>
+    <div id="results" class="collapse" style="background-color: #efefef">
+        <span>{{$ctrl.test.results}}</span>
+    </div>
+    <br><br><br>
+
 </div>
