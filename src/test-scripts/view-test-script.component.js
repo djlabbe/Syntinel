@@ -14,5 +14,15 @@
             vm.test = test.data;
             vm.test.name = test.data.name;
         });
+        vm.runTest = function(){
+            testScriptSvc.runTest(vm.test).then(function(data){
+               var test = data;
+            });
+        };
+        vm.deleteTest = function(){
+            testScriptSvc.deleteTest(vm.test).then(function(data){
+                var test = data;
+            });
+        };
     }
 }());

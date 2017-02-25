@@ -29,24 +29,17 @@ router.get('/test/', function(req, res, next) {
 
 /* Retrieve results along with tests (populate tests with results) */
 router.get('/test/:test', function(req, res, next) {
-
   req.test.populate('results', function(err, test) {
-
     if (err) { return next(err); } else {
-
-        fs.readFile('tests/9cb30f2d698b1d410196a5eaa7ff7293', 'utf8', function (err,data) {
+      console.log(req.test);
+        fs.readFile(req.test.file.path, 'utf8', function (err,data) {
             if (err) {
                 return console.log(err);
             }
             test.filecontents = data;
-
             return res.json(test);
         });
-
     }
-
-
-
   });
 });
 
@@ -67,14 +60,14 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
   cursor.on('data', function(test) {
     // Change the permissions to allow execute
     fs.chmod(test.file.path, 0777, function(err){
-      if(err) { return next(err); } 
+      if(err) { return next(err); }
     });
 
     // Execute the script
     exec(test.file.path, function (error, stdout, stderr) {
-      if (error) { 
+      if (error) {
         console.log('exec error: ' + error);
-        return next(error); 
+        return next(error);
       }
 
 
@@ -103,7 +96,7 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
 
         // And save the test
         test.save(function(err, test) {
-          if(err){ return next(err); } 
+          if(err){ return next(err); }
         });
       });
     });
@@ -121,16 +114,15 @@ router.post('/test/:test/run', auth, function(req, res, next) {
     if (err) {
       return next(err);
     }
-
       // Change the permissions to allow execute
     fs.chmod(test.file.path, 0777, function(err){
       if(err) {
         return next(err); }
     });
-    exec(test.file.path, function (error, stdout, stderr) {
+    exec("start " + test.file.path, function (error, stdout, stderr) {
       if (error) {
         console.log('exec error: ' + error);
-        return next(error); 
+        return next(error);
       }
 
       // // If no error : print the output streams... for debugging
@@ -167,6 +159,16 @@ router.post('/test/:test/run', auth, function(req, res, next) {
     });
 
   });
+});
+
+/* DELETE a specific Test */
+// TODO: @JOSH Delete Test along with the Results and the file path
+router.delete('/test/:test/delete', function (req, res, next) {
+    Test.findByIdAndRemove(req.params.test, function(err, test){
+      if(err){
+        return next(err);
+      }
+    });
 });
 
 /* Preload a TEST object by id */

@@ -1,7 +1,10 @@
-<div class="container">
-    <div class="form-control">
-        <label>Test Name</label>
-        <span>{{$ctrl.test.name}}</span>
+<div>
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="pull-center">
+                <h3>Test Scripts</h3>
+            </div>
+        </div>
     </div>
     <div class="form-control">
         <label>Test Status</label>
@@ -26,5 +29,6 @@
         <span>{{$ctrl.test.results}}</span>
     </div>
     <br><br><br>
-
+    <button type="button" class="btn btn-primary" ng-click="$ctrl.runTest()">Run Test</button>
+    <button type="button" class="btn btn-danger" ng-click="$ctrl.deleteTest()">Delete Test</button>
 </div>

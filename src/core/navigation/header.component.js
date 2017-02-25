@@ -9,14 +9,17 @@
     function headerCtrl(authenticationSvc, $state, $rootScope){
         var vm = this;
         vm.menuTree = [];
+        vm.user = {};
+        vm.userLoggedIn = false;
+
         vm.user = authenticationSvc.currentUser();
+        vm.userLoggedIn = authenticationSvc.isLoggedIn();
         getMenu();
 
         $rootScope.$on("userAuthentication", function(evt, args){
             vm.userLoggedIn = args.userLogin;
             getMenu();
         });
-        vm.userLoggedIn = authenticationSvc.isLoggedIn();
         vm.userLogOut = function(){
             authenticationSvc.logOut();
             vm.userLoggedIn = false;

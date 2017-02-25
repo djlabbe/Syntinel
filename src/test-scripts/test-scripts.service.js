@@ -9,7 +9,8 @@
             getAllTests: getAllTests,
             getTest: getTest,
             createTest: createTest,
-            runTest: runTest
+            runTest: runTest,
+            deleteTest: deleteTest
         };
         return svc;
 
@@ -39,6 +40,10 @@
                 .post('/test/' + test._id + '/run', null,
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
+        }
+        function deleteTest(test){
+            return $http
+                .delete('test/' + test._id + '/delete');
         }
     }
 }());
