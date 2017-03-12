@@ -31,7 +31,6 @@ router.get('/test/', function(req, res, next) {
 router.get('/test/:test', function(req, res, next) {
   req.test.populate('results', function(err, test) {
     if (err) { return next(err); } else {
-      console.log(req.test);
         fs.readFile(req.test.file.path, 'utf8', function (err,data) {
             if (err) {
                 return console.log(err);
@@ -81,11 +80,12 @@ router.post('/run/5000', function(req, res, next) { // Add auth back in
       var d = new Date();
 
       var result = new Result({
-                    timestamp: d.toUTCString(),
-                    passed: didPass,
-                    output: stdout,
-                    error: stderr
-                    });
+        test_id: test._id,
+        timestamp: d.toUTCString(),
+        passed: didPass,
+        output: stdout,
+        error: stderr
+      });
 
       // Create a result record in db
       result.save(function(err, result){
@@ -135,11 +135,12 @@ router.post('/test/:test/run', auth, function(req, res, next) {
       var d = new Date();
 
       var result = new Result({
-                    timestamp: d.toUTCString(),
-                    passed: didPass,
-                    output: stdout,
-                    error: stderr
-                    });
+        test_id: test._id,
+        timestamp: d.toUTCString(),
+        passed: didPass,
+        output: stdout,
+        error: stderr
+      });
 
       // Create a result record in db
       result.save(function(err, result){
@@ -151,9 +152,12 @@ router.post('/test/:test/run', auth, function(req, res, next) {
         // And save the test
         test.save(function(err, test) {
           if(err){ return next(err); }
-
-          // if test saved ok return the result json
-          return res.json(result);
+          Test.find({})
+              .populate('results')
+              .exec(function(err, test) {
+                  // if test saved ok return the result json
+                  console.log(JSON.stringify(test, null, "\t"))
+              });
         });
       });
     });
@@ -162,12 +166,15 @@ router.post('/test/:test/run', auth, function(req, res, next) {
 });
 
 /* DELETE a specific Test */
-// TODO: @JOSH Delete Test along with the Results and the file path
+// TODO: @JOSH Delete Test from App model and the file path from local
 router.delete('/test/:test/delete', function (req, res, next) {
-    Test.findByIdAndRemove(req.params.test, function(err, test){
+    Test.findById(req.params.test, function(err, test){
       if(err){
         return next(err);
+      } else if (!test){
+          return console.log("Test not found.");
       }
+      test.remove();
     });
 });
 

@@ -1,5 +1,7 @@
 (function(){
     "use strict";
     angular
-        .module('testScripts', []);
+        .module('testScripts', [
+            'ui.router'
+        ]);
 }());

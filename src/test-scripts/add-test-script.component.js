@@ -10,9 +10,15 @@
     function addTestCtrl($stateParams, applicationSvc, testScriptSvc, $location){
         var vm = this;
         vm.test = {};
+        vm.applications = [];
+        vm.app = {};
         if($stateParams.appId){
             applicationSvc.getApp($stateParams.appId).then(function(app){
                 vm.app = app.data;
+            });
+        } else {
+            applicationSvc.getAllApps().then(function(apps){
+                vm.applications = apps;
             });
         }
         vm.saveTest = function(){
