@@ -110,7 +110,7 @@ router.post('/test/:test/run', auth, function(req, res, next) {
   // retrieve the entire test object from the db
   Test.findById(req.params.test, function (err, test) {
     // Execute the script
-    console.log(test);
+    // console.log(test);
     if (err) {
       return next(err);
     }
@@ -126,11 +126,12 @@ router.post('/test/:test/run', auth, function(req, res, next) {
       }
 
       // // If no error : print the output streams... for debugging
-      console.log('stdout: ' + stdout);
-      console.log('stderr: ' + stderr);
+      // console.log('stdout: ' + stdout);
+      // console.log('stderr: ' + stderr);
 
       // If stderr is empty - then the test passed! (FOR NOW!! TODO)
       var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? 'SUCCESS' : 'FAIL';
+      console.log('Test ', test.name, ' Result: ', didPass);
 
       var d = new Date();
 
@@ -156,6 +157,7 @@ router.post('/test/:test/run', auth, function(req, res, next) {
               .populate('results')
               .exec(function(err, test) {
                   // if test saved ok return the result json
+                  console.log('Test ', test.name, 'Ran and Saved');
                   console.log(JSON.stringify(test, null, "\t"))
               });
         });
@@ -166,8 +168,10 @@ router.post('/test/:test/run', auth, function(req, res, next) {
 });
 
 /* DELETE a specific Test */
-// TODO: @JOSH Delete Test from App model and the file path from local
+// TODO: @JOSH Delete Test from App model
 router.delete('/test/:test/delete', function (req, res, next) {
+
+    // Find and remove Test Script
     Test.findById(req.params.test, function(err, test){
       if(err){
         return next(err);
@@ -175,6 +179,10 @@ router.delete('/test/:test/delete', function (req, res, next) {
           return console.log("Test not found.");
       }
       test.remove();
+      console.log("Test Script ", test.name, " removed.");
+      // Remove File from System
+      fs.unlinkSync(test.file.path);
+      console.log("Test File ", test.file.filename, " removed.");
     });
 });
 

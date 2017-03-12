@@ -16,7 +16,6 @@ var TestSchema = new mongoose.Schema({
 });
 
 TestSchema.pre('remove', function(next){
-  console.log(this.results);
   this.model('Result').remove({test_id: this._id}, next);
 });
 
