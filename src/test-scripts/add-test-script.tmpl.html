@@ -24,10 +24,8 @@
             <label class="col-md-3 control-label">Application</label>
             <div class="col-md-6">
                 <select class="form-control" name="applicationSelect"
-                       ng-model="$ctrl.app.name">
-                    <!--<div ng-if="$ctrl.app">-->
-                        <!--<option ng-repeat="apps in $ctrl.applications"></option>-->
-                    <!--</div>-->
+                        ng-model="$ctrl.app"
+                        ng-options="app.name for app in $ctrl.applications">
                 </select>
             </div>
         </div>

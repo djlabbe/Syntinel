@@ -14,11 +14,13 @@
         vm.app = {};
         if($stateParams.appId){
             applicationSvc.getApp($stateParams.appId).then(function(app){
+                vm.applications.push(app.data);
                 vm.app = app.data;
             });
         } else {
             applicationSvc.getAllApps().then(function(apps){
-                vm.applications = apps;
+                vm.applications = apps.data;
+                vm.app = vm.applications[0];
             });
         }
         vm.saveTest = function(){
