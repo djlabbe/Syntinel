@@ -52,56 +52,56 @@ router.get('/test/:test', function(req, res, next) {
  */
 
 /* Run all tests schedule for 5000ms */
-router.post('/run/5000', function(req, res, next) { // Add auth back in
+// router.post('/run/5000', function(req, res, next) { // Add auth back in
  
-  var cursor = Test.find({}).cursor();
+//   var cursor = Test.find({}).cursor();
 
-  cursor.on('data', function(test) {
-    // Change the permissions to allow execute
-    fs.chmod(test.file.path, 0777, function(err){
-      if(err) { return next(err); }
-    });
+//   cursor.on('data', function(test) {
+//     // Change the permissions to allow execute
+//     fs.chmod(test.file.path, 0777, function(err){
+//       if(err) { return next(err); }
+//     });
 
-    // Execute the script
-    exec(test.file.path, function (error, stdout, stderr) {
-      if (error) {
-        console.log('exec error: ' + error);
-        return next(error);
-      }
+//     // Execute the script
+//     exec(test.file.path, function (error, stdout, stderr) {
+//       if (error) {
+//         console.log('exec error: ' + error);
+//         return next(error);
+//       }
 
 
-      // // If no error : print the output streams... for debugging
-      // console.log('stdout: ' + stdout);
-      // console.log('stderr: ' + stderr);
+//       // // If no error : print the output streams... for debugging
+//       // console.log('stdout: ' + stdout);
+//       // console.log('stderr: ' + stderr);
 
-      // If stderr is empty - then the test passed! (FOR NOW!! TODO)
-      var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? 'SUCCESS' : 'FAIL';
+//       // If stderr is empty - then the test passed! (FOR NOW!! TODO)
+//       var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? 'SUCCESS' : 'FAIL';
 
-      var d = new Date();
+//       var d = new Date();
 
-      var result = new Result({
-        test_id: test._id,
-        timestamp: d.toUTCString(),
-        passed: didPass,
-        output: stdout,
-        error: stderr
-      });
+//       var result = new Result({
+//         test_id: test._id,
+//         timestamp: d.toUTCString(),
+//         passed: didPass,
+//         output: stdout,
+//         error: stderr
+//       });
 
-      // Create a result record in db
-      result.save(function(err, result){
-        if(err){ return next(err); }
+//       // Create a result record in db
+//       result.save(function(err, result){
+//         if(err){ return next(err); }
 
-        // If the result was created then push it to the test
-        test.results.push(result);
+//         // If the result was created then push it to the test
+//         test.results.push(result);
 
-        // And save the test
-        test.save(function(err, test) {
-          if(err){ return next(err); }
-        });
-      });
-    });
-  });
-});
+//         // And save the test
+//         test.save(function(err, test) {
+//           if(err){ return next(err); }
+//         });
+//       });
+//     });
+//   });
+// });
 
 /* "Run" a test (CREATE a result) --Is post correct? Get? put??,
     or maybe this calls another route when the result is actually generated? 
@@ -131,7 +131,7 @@ router.post('/test/:test/run', auth, function(req, res, next) {
       // console.log('stderr: ' + stderr);
 
       // If stderr is empty - then the test passed! (FOR NOW!! TODO)
-      var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? 'SUCCESS' : 'FAIL';
+      var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? true : false;
       console.log('Test ', test.name, ' Result: ', didPass);
 
       var d = new Date();
@@ -139,7 +139,7 @@ router.post('/test/:test/run', auth, function(req, res, next) {
       var result = new Result({
         test_id: test._id,
         timestamp: d.toUTCString(),
-        passed: didPass,
+        status: didPass,
         output: stdout,
         error: stderr
       });
@@ -173,11 +173,25 @@ router.delete('/test/:test/delete', function (req, res, next) {
       } else if (!test){
           return console.log("Test not found.");
       }
+      // Remove from db
       test.remove();
-      console.log("Test Script ", test.name, " removed.");
+
       // Remove File from System
       fs.unlinkSync(test.file.path);
-      console.log("Test File ", test.file.filename, " removed.");
+
+      App.findById(test.parentApp, function(err, app) {
+        if (err){ return next(err);}
+        console.log("### APP.TESTS ####")
+        console.log(app.tests);
+        var index = app.tests.indexOf(test.id);
+        if (index > -1) {
+          app.tests.splice(index, 1);
+        }
+        app.save(function(err, app) {
+          if(err){ return next(err);}
+          return res.json(test);
+        })
+      })
     });
 });
 

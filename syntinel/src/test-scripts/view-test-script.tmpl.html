@@ -13,7 +13,7 @@
 
     <div>
         <h4>Results</h4>
-        <div ng-repeat="result in $ctrl.test.results"> <li>{{result.timestamp | date : format : medium}} {{result.passed}}</li></div>
+        <div ng-repeat="result in $ctrl.test.results | orderBy: '-timestamp'"> <li>{{result.timestamp | date : format : medium}} {{result.status}}</li></div>
     </div>
 
     <hr>

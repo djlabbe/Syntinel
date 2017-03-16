@@ -40,9 +40,11 @@
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
         }
+        
         function deleteTest(test){
-            return $http
-                .delete('test/' + test._id + '/delete');
+            return $http.delete('test/' + test._id + '/delete', null,
+                {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
+            });
         }
     }
 }());

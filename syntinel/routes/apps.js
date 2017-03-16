@@ -43,6 +43,7 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
     description: req.body.description,
     file: req.file,
     status: "NOTRUN",
+    parentApp: req.app,
     frequency: 5000,
     results: []
   };

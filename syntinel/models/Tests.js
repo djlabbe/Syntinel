@@ -7,6 +7,7 @@ var TestSchema = new mongoose.Schema({
   file: Object,
   status: Boolean,
   filecontents: String,
+  parentApp: { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
 
   // 5sec = 5000, 5 mins = 5 * 60  * 1000
   frequency: { type: Number, enum: [5000, 30000], default: 30000},
