@@ -1,0 +1,38 @@
+<div>
+
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="pull-center">
+                <h3 class="test-{{$ctrl.test.status}}">{{$ctrl.test.name}}
+                 <button type="button" class="btn btn-danger a-title-btn" ng-click="$ctrl.deleteTest()">Delete Test</button>
+                 <button type="button" class="btn btn-primary a-title-btn" ng-click="$ctrl.runTest()">Run Test</button>
+                </h3>
+            </div>
+        </div>
+    </div>
+
+    <div>
+        <h4>Results</h4>
+        <div ng-repeat="result in $ctrl.test.results"> <li>{{result.timestamp | date : format : medium}} {{result.passed}}</li></div>
+    </div>
+
+    <hr>
+
+    <!-- <div>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#results">View Results</button>
+        <div id="results" class="collapse" style="background-color: #efefef">
+            <span>{{$ctrl.test.results}}</span>
+        </div>
+    </div> -->
+
+    <div>
+        <button class="btn btn-primary" data-toggle="collapse" data-target="#script">View Script</button>
+        <div id="script" class="collapse" style="background-color: #efefef">
+            <span>{{$ctrl.test.filecontents}}</span>
+        </div>
+    </div>
+
+
+    
+    
+</div>

@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Syntinel</title>
+    <link href="node_modules/bootstrap/dist/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
+    <link href="node_modules/bootstrap/dist/css/bootstrap-theme.min.css" rel="stylesheet" type="text/css" />
+    <link href="node_modules/angular-ui-grid/ui-grid.min.css" rel="stylesheet" type="text/css"/>
+    <link href="src/core/css/app.css" rel="stylesheet" type="text/css" />
+</head>
+<body ng-app="app">
+    <header-comp></header-comp>
+    <div class="container" ui-view></div>
+
+    <!-- node_modules -->
+    <script src="node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="node_modules/angular/angular.min.js"></script>
+    <script src="node_modules/angular-bootstrap/ui-bootstrap.min.js"></script>
+    <script src="node_modules/angular-bootstrap/ui-bootstrap-tpls.min.js"></script>
+    <script src="node_modules/angular-route/angular-route.min.js"></script>
+    <script src="node_modules/angular-ui-router/release/angular-ui-router.min.js"></script>
+    <script src="node_modules/ng-file-upload/dist/ng-file-upload.min.js"></script>
+    <script src="node_modules/angular-ui-grid/ui-grid.min.js"></script>
+    <!-- app.module -->
+    <script src="app.module.js"></script>
+    <!-- core -->
+    <script src="src/core/core.module.js"></script>
+    <script src="src/core/core.states.js"></script>
+    <script src="src/core/navigation/header.component.js"></script>
+    <script src="src/core/authentication.service.js"></script>
+    <script src="src/core/users/manage-user.controller.js"></script>
+    <!-- src/applications -->
+    <script src="src/applications/applications.module.js"></script>
+    <script src="src/applications/applications.component.js"></script>
+    <script src="src/applications/applications.states.js"></script>
+    <script src="src/applications/applications.service.js"></script>
+    <script src="src/applications/add-application.component.js"></script>
+    <!-- test-scripts -->
+    <script src="src/test-scripts/test-scripts.module.js"></script>
+    <script src="src/test-scripts/test-scripts.service.js"></script>
+    <script src="src/test-scripts/test-scripts.states.js"></script>
+    <script src="src/test-scripts/manage-test-scripts.component.js"></script>
+    <script src="src/test-scripts/add-test-script.component.js"></script>
+    <script src="src/test-scripts/view-test-script.component.js"></script>
+
+
+</body>
+</html>
