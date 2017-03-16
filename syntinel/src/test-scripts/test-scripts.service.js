@@ -36,8 +36,7 @@
             return deferred.promise;
         }
         function runTest(test){
-            return $http
-                .post('/test/' + test._id + '/run', null,
+            return $http.post('/test/' + test._id + '/run', null,
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
         }

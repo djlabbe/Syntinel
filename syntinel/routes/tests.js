@@ -119,6 +119,7 @@ router.post('/test/:test/run', auth, function(req, res, next) {
       if(err) {
         return next(err); }
     });
+    
     exec(test.file.path, function (error, stdout, stderr) {
       if (error) {
         console.log('exec error: ' + error);
@@ -153,17 +154,11 @@ router.post('/test/:test/run', auth, function(req, res, next) {
         // And save the test
         test.save(function(err, test) {
           if(err){ return next(err); }
-          Test.find({})
-              .populate('results')
-              .exec(function(err, test) {
-                  // if test saved ok return the result json
-                  console.log('Test ', test.name, 'Ran and Saved');
-                  console.log(JSON.stringify(test, null, "\t"))
-              });
+          // return result of the run
+          return res.json(result);
         });
       });
     });
-
   });
 });
 
