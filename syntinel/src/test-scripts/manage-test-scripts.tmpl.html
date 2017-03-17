@@ -8,6 +8,14 @@
             </div>
         </div>
     </div>
+
+    <div class="error-message" ng-if="$ctrl.errorMessage!=''">
+    {{$ctrl.errorMessage}}
+    </div>
+
+    <div class="message" ng-if="$ctrl.message!=''">
+    {{$ctrl.message}}
+    </div>
     
     <div class="gridStyle" ui-grid="$ctrl.gridOptions" ui-grid-selection></div>
     

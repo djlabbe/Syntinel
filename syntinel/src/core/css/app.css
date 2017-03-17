@@ -94,6 +94,15 @@ h3 {
   font-weight: bold;
 }
 
+.message{
+  margin-bottom: 20px;
+  margin-top: 20px;
+  color: green;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
 
 .blue-cell {
   color: blue;

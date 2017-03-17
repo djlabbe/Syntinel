@@ -9,6 +9,8 @@
     /* @ngInject */
     function ManageScripts(applicationSvc, $stateParams, $location, testScriptSvc, $scope){
         var vm = this;
+        vm.message = "";
+        vm.errorMessage = "";
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
             {
@@ -80,6 +82,7 @@
             tests.forEach(function(test){
                 testScriptSvc.runTest(test);
             });
+            vm.message = "Test run complete!";
         };
         $scope.viewTest = function(row){
             var url = '/tests/test/' + row._id;

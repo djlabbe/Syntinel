@@ -121,27 +121,32 @@ router.post('/test/:test/run', auth, function(req, res, next) {
     });
     
     exec(test.file.path, function (error, stdout, stderr) {
+
+      var date = new Date();
+      var didPass = false;
+      var errorMsg = null;
+      var output = null;
+
+      /* If there was a problem executing the script, we log the error message
+         and return that as a result */
       if (error) {
-        console.log('exec error: ' + error);
-        return next(error);
+        errorMsg = error;
+        var didPass = false;
       }
-
-      // // If no error : print the output streams... for debugging
-      // console.log('stdout: ' + stdout);
-      // console.log('stderr: ' + stderr);
-
-      // If stderr is empty - then the test passed! (FOR NOW!! TODO)
-      var didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? true : false;
-      console.log('Test ', test.name, ' Result: ', didPass);
-
-      var d = new Date();
+      /* The script itself ran successfully, the test itself can still fail or pass.
+         Save messages as a result. */
+      else {
+        didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? true : false;
+        errorMsg = stderr;
+        output = stdout;
+      }
 
       var result = new Result({
         test_id: test._id,
-        timestamp: d.toUTCString(),
+        timestamp: date.toUTCString(),
         status: didPass,
-        output: stdout,
-        error: stderr
+        output: output,
+        error: errorMsg
       });
 
       // Create a result record in db
@@ -150,11 +155,11 @@ router.post('/test/:test/run', auth, function(req, res, next) {
 
         // If the result was created then push it to the test
         test.results.push(result);
+        test.status = didPass;
 
         // And save the test
         test.save(function(err, test) {
-          if(err){ return next(err); }
-          // return result of the run
+          if(err){ return next(err);  }
           return res.json(result);
         });
       });
