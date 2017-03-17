@@ -11,10 +11,11 @@
         var vm = this;
         vm.message = "";
         vm.errorMessage = "";
-        vm.gridOptions = {};
+        vm.gridOptions = {enableFiltering: true};
         vm.gridOptions.columnDefs = [
             {
                 field:'status',
+                enableFiltering: false,
                 displayName: 'Status',
                 cellTemplate: "<div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div>",
                 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -41,12 +42,14 @@
                 resizable: true
             }, {
                 field:'created',
+                enableFiltering: false,
                 displayName: 'Created On',
                 cellTemplate: "<div>{{row.entity.created | date:'medium'}}</div>",
                 width: "20%",
                 resizable: true
             }, {
                 field: 'frequency',
+                enableFiltering: false,
                 displayName: 'Schedule',
                 width: "12%"
             }
@@ -55,13 +58,18 @@
             vm.gridApi = gridApi;
         };
         if($stateParams.id){
-        // Get tests for specific app
+        
+            if (testScriptSvc.getLastDeletedTest() != null) {
+                vm.message = "Successfully deleted test: " + testScriptSvc.getLastDeletedTest().name;
+                testScriptSvc.resetLastDeleted();
+            }
+            // Get tests for specific app
             applicationSvc.getApp($stateParams.id).then(function(app){
                 vm.app = app.data;
                 vm.gridOptions.data = app.data.tests;
             });
         } else {
-        // Get all Tests
+            // Get all Tests
             testScriptSvc.getAllTests().then(function(tests){
                 vm.gridOptions.data = tests.data;
             });

@@ -9,11 +9,12 @@
         });
     function applicationsCtrl(applicationSvc, $location, $scope, $state){
         var vm = this;
-        vm.gridOptions = {};
+        vm.gridOptions = {enableFiltering: true};
 
         vm.gridOptions.columnDefs = [
             {
                 field:'status',
+                enableFiltering: false,
                 displayName: 'Status',
                 cellTemplate: "<div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div>",
                 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
@@ -40,6 +41,7 @@
                 resizable: true
             },{
                 field:'created',
+                enableFiltering: false,
                 displayName: 'Created On',
                 cellTemplate: "<div>{{row.entity.created | date:'medium'}}</div>",
                 width: "20%",
@@ -51,6 +53,7 @@
                 resizable: true
             },{
                 field: 'tests',
+                enableFiltering: false,
                 displayName: 'Tests',
                 cellTemplate: "<div>{{row.entity.tests.length}}</div>",
                 width: "8%",

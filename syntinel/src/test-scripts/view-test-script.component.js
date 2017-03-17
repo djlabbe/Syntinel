@@ -17,6 +17,7 @@
             vm.test = resp.data;
             vm.test.name = resp.data.name;
             vm.gridOptions.data = resp.data.results;
+
         });
         vm.runTest = function(){
             testScriptSvc.runTest(vm.test).then(function(resp){
@@ -32,7 +33,7 @@
         };
 
 
-         vm.gridOptions = {};
+        vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
             {
                 field:'status',
@@ -57,13 +58,13 @@
             }, {
                 field:'output',
                 displayName: 'Test Output',
-                cellTemplate: "<div>{{row.entity.output}}</div>",
+                cellTemplate: "<div>{{row.entity.output | limitTo: 50}}</div>",
                 width: "35%",
                 resizable: true
             }, {
                 field:'error',
                 displayName: 'Test Error',
-                cellTemplate: "<div>{{row.entity.error}}</div>",
+                cellTemplate: "<div>{{row.entity.error | limitTo: 50}}</div>",
                 width: "35%",
                 resizable: true
             }
@@ -71,11 +72,6 @@
         vm.gridOptions.onRegisterApi = function(gridApi){
             vm.gridApi = gridApi;
         };
-
-
-
-
-
 
     }
 }());

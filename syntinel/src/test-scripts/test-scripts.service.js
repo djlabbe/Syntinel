@@ -5,7 +5,12 @@
         .factory('testScriptSvc', TestScriptSvc);
 
     function TestScriptSvc($http, $q, Upload, authenticationSvc){
+
+        var lastDeleted = null;
+
         var svc = {
+            getLastDeletedTest: getLastDeletedTest,
+            resetLastDeleted: resetLastDeleted,
             getAllTests: getAllTests,
             getTest: getTest,
             createTest: createTest,
@@ -13,6 +18,13 @@
             deleteTest: deleteTest
         };
         return svc;
+
+        function getLastDeletedTest(){
+            return lastDeleted;
+        }
+        function resetLastDeleted(){
+            lastDeleted = null;
+        }
 
         function getAllTests(){
             return $http
@@ -42,6 +54,7 @@
         }
         
         function deleteTest(test){
+            lastDeleted = test;
             return $http.delete('test/' + test._id + '/delete', null,
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
