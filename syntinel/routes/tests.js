@@ -121,8 +121,6 @@ router.post('/test/:test/run', auth, function(req, res, next) {
     });
     
     exec(test.file.path, function (error, stdout, stderr) {
-
-      var date = new Date();
       var didPass = false;
       var errorMsg = null;
       var output = null;
@@ -143,7 +141,7 @@ router.post('/test/:test/run', auth, function(req, res, next) {
 
       var result = new Result({
         test_id: test._id,
-        timestamp: date.toUTCString(),
+        created: Date.now(),
         status: didPass,
         output: output,
         error: errorMsg
