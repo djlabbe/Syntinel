@@ -7,6 +7,8 @@
             templateUrl: 'src/applications/applications.tmpl.html',
             controller: applicationsCtrl
         });
+
+    /* @ngInject */
     function applicationsCtrl(applicationSvc, $location, $scope, $state){
         var vm = this;
         vm.gridOptions = {enableFiltering: true};
