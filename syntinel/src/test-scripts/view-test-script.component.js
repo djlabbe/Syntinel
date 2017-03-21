@@ -64,7 +64,7 @@
             }, {
                 field:'error',
                 displayName: 'Test Error',
-                cellTemplate: "<div>{{row.entity.error | limitTo: 50}}</div>",
+                cellTemplate: "<div>{{row.entity.error}}</div>",
                 width: "35%",
                 resizable: true
             }
