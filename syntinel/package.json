@@ -4,7 +4,7 @@
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "node index"
+    "start": "node index.js"
   },
   "dependencies": {
     "angular": "^1.6.1",
@@ -33,8 +33,4 @@
     "selenium-webdriver": "^3.3.0",
     "serve-favicon": "~2.3.0"
   }
-},
-
-"scripts": {
-    "start": "node index.js",
-  },
+}
