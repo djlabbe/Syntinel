@@ -72,6 +72,5 @@
         vm.gridOptions.onRegisterApi = function(gridApi){
             vm.gridApi = gridApi;
         };
-
     }
 }());
