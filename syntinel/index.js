@@ -32,7 +32,7 @@ MongoDB.once('open', function () {
 
 // uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'src', 'favicon.ico')));
-app.use(express.static(__dirname + '/build'));
+app.use(express.static(__dirname + '/'));
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({'extended':'true'}));
