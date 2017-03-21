@@ -40,5 +40,11 @@
                 });
             }
         }
+
+        vm.resetForm = function(){
+             vm.test.file = null;
+             vm.test.description = "";
+             vm.test.name = "";
+        }
     }
 }());

@@ -12,8 +12,10 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var bodyParser = require('body-parser');
+var productionMongoURI = process.env.MONGOLAB_URI;
 var mongoURI = "mongodb://localhost/syntinel";
-var MongoDB = mongoose.connect(mongoURI).connection;
+var MongoDB = mongoose.connect(productionMongoURI).connection;
+//var MongoDB = mongoose.connect(mongoURI).connection;
 var app = express();
 const port = 3000;
 

@@ -103,51 +103,111 @@ router.get('/test/:test', function(req, res, next) {
 //   });
 // });
 
+
+
+// SHELL SCRIPT RUN
 /* "Run" a test (CREATE a result) --Is post correct? Get? put??,
     or maybe this calls another route when the result is actually generated? 
 */
+// router.post('/test/:test/run', auth, function(req, res, next) {
+//   // retrieve the entire test object from the db
+//   Test.findById(req.params.test, function (err, test) {
+//     // Execute the script
+
+//     if (err) {
+//       return next(err);
+//     }
+
+//       // Change the permissions to allow execute
+//     fs.chmod(test.file.path, 0777, function(err){
+//       if(err) {
+//         return next(err); }
+//     });
+    
+//     exec(test.file.path, function (error, stdout, stderr) {
+//       var didPass = false;
+//       var errorMsg = null;
+//       var output = null;
+
+//       /* If there was a problem executing the script, we log the error message
+//          and return that as a result */
+//       if (error) {
+//         errorMsg = error;
+//         var didPass = false;
+//       }
+//        The script itself ran successfully, the test itself can still fail or pass.
+//          Save messages as a result. 
+//       else {
+//         didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? true : false;
+//         errorMsg = stderr;
+//         output = stdout;
+//       }
+
+//       var result = new Result({
+//         test_id: test._id,
+//         created: Date.now(),
+//         status: didPass,
+//         output: output,
+//         error: errorMsg
+//       });
+
+//       // Create a result record in db
+//       result.save(function(err, result){
+//         if(err){ return next(err); }
+
+//         // If the result was created then push it to the test
+//         test.results.push(result);
+//         test.status = didPass;
+
+//         // And save the test
+//         test.save(function(err, test) {
+//           if(err){ return next(err);  }
+//           return res.json(result);
+//         });
+//       });
+//     });
+//   });
+// });
+
+
+
 router.post('/test/:test/run', auth, function(req, res, next) {
   // retrieve the entire test object from the db
   Test.findById(req.params.test, function (err, test) {
     // Execute the script
-    // console.log(test);
+
     if (err) {
       return next(err);
     }
-      // Change the permissions to allow execute
+
+
+    // Change the permissions to allow execute
     fs.chmod(test.file.path, 0777, function(err){
       if(err) {
         return next(err); }
     });
-    
-    exec(test.file.path, function (error, stdout, stderr) {
-      var didPass = false;
-      var errorMsg = null;
-      var output = null;
 
-      /* If there was a problem executing the script, we log the error message
-         and return that as a result */
-      if (error) {
-        errorMsg = error;
-        var didPass = false;
-      }
-      /* The script itself ran successfully, the test itself can still fail or pass.
-         Save messages as a result. */
-      else {
-        didPass = (stderr === undefined || stderr == null || stderr.length <= 0) ? true : false;
-        errorMsg = stderr;
-        output = stdout;
-      }
+    
+    var invoked = false; // keep track of whether callback has been invoked to prevent multiple invocations
+    var didPass = false;
+    var errorMsg = null;
+    var output = null;
+  
+    var child = exec('node  ' + test.file.path, (error, stdout, stderr) => {
+      var errorMsg = "";
+      if(error) {errorMsg = err;}
+      if(stderr) {errorMsg = stderr;}
+      console.log(errorMsg);
+      var didPass = (errorMsg === undefined || errorMsg == null || errorMsg.length <= 0) ? true : false;
 
       var result = new Result({
         test_id: test._id,
         created: Date.now(),
         status: didPass,
-        output: output,
+        output: stdout,
         error: errorMsg
       });
 
-      // Create a result record in db
       result.save(function(err, result){
         if(err){ return next(err); }
 
@@ -164,6 +224,12 @@ router.post('/test/:test/run', auth, function(req, res, next) {
     });
   });
 });
+
+
+
+
+
+
 
 /* DELETE a specific Test */
 // TODO: @JOSH Delete Test from App model
