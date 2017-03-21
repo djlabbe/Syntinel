@@ -18,12 +18,12 @@
 ##### 2. Create Horuku Application
 ##### 3. Install Heroku CLI / Toolbelt
 ##### 4. terminal : heroku login
-###### (Add your Heroku app as a remote to your existing git clone’d repo)
+##### (Add your Heroku app as a remote to your existing git clone’d repo)
 ##### 6. terminal : cd path/to/syntinel
 ##### 7. terminal : heroku git:remote -a syntinel
 ###### (Push to Heroku)
 ##### 8. terminal: git push heroku master
-###### (https://syntinel.herokuapp.com/) => error => We need to install mongo
+##### (https://syntinel.herokuapp.com/) => error => We need to install mongo
 ##### 9. Go to your heroku app dashboard.
 ##### 10. Click Get More Addons
 ##### 11. mLab MongoDB => install to syntinel
