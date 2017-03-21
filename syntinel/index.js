@@ -13,7 +13,7 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var bodyParser = require('body-parser');
-var mongoURI = process.env.MONGOLAB_URI || 'mongodb://localhost/syntinel';
+var mongoURI = process.env.MONGOLAB_CYAN_URI || 'mongodb://localhost/syntinel';
 var MongoDB = mongoose.connect(mongoURI).connection;
 var app = express();
 
