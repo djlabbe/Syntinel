@@ -1,0 +1,150 @@
+#home-button {
+  margin: 0;
+  padding: 0;
+}
+.navbar {
+  min-height: 30px;
+  height: 50px;
+}
+
+.test-true {
+  color: green;
+}
+
+
+.test-false {
+  color: red;
+}
+
+.import-input {
+  margin-left: 10px;
+  padding-left: 30px;
+}
+
+#script {
+  margin-top: 10px;
+  border: 1px solid black;
+  padding: 4px;
+  font-family: Courier;
+}
+
+h3 {
+  font-size: 30px;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  padding-bottom: 0px;
+  padding-bottom: 0px;
+}
+
+.a-title-btn {
+  height: 30px;
+  float: right;
+  margin-bottom: 10px;
+  margin-left: 10px;
+  text-align: center;
+}
+
+.page-header {
+  margin-top: 2px;
+  margin-bottom: 2px;
+  padding-bottom: 0px;
+}
+#menu-icon {
+  margin-top: 5px;
+  margin-right: 20px;
+  height:40px;
+  width:40px;
+}
+
+
+.dropdown-toggle:hover {
+    cursor: pointer;
+}
+.dropdown-menu:hover{
+    cursor: pointer;
+}
+.clickable{
+    cursor: pointer;
+}
+.main-container{
+    width:100%;
+    text-align: center;
+}
+
+.main-title{
+  text-align: center;
+  font-size: 7em; 
+}
+
+.main-button-container{
+  margin: 0 auto;
+  width: 50%;
+  text-align: center;
+}
+
+.btn-synt{
+  min-width:100px;
+  margin: 20px 30px 20px 30px;
+}
+
+#jumbotron{
+  height: 200px;
+  size: 50%;
+}
+
+.error-message{
+  margin-bottom: 20px;
+  margin-top: 20px;
+  color: red;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+.message{
+  margin-bottom: 20px;
+  margin-top: 20px;
+  color: green;
+  font-size: 18px;
+  font-weight: bold;
+}
+
+
+
+
+.blue-cell {
+  color: blue;
+  font-weight: bold;
+}
+
+.grey-cell {
+  padding-right: 10px;
+  padding-top: 5px;
+  text-align: right;
+  color: black;
+  font-weight: bold;
+}
+
+.green-cell {
+  padding-right: 10px;
+  padding-top: 5px;
+  text-align: right;
+  color: white;
+  font-weight: bold;
+  background-color: #00cc99 !important;
+}
+
+.red-cell {
+  padding-right: 10px;
+  padding-top: 5px;
+  text-align: right;
+  color: white;
+  font-weight: bold;
+  background-color: #ff3300 !important
+}
+
+.ui-grid {
+  margin-bottom: 15px;
+}
+.ui-grid-cell{
+  padding-left: 5px;
+}
