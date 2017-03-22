@@ -117,13 +117,11 @@ router.post('/test/:test/run', function(req, res, next) {
       if(err) { return next(err); }
     });
 
-    
-
     var execCommand = '';
     if (test.scriptType == 'shell') { execCommand = test.file.path;}
     if (test.scriptType == 'selenium') { execCommand = 'node ' + test.file.path;}
   
-    exec(execCommand, (error, stdout, stderr) => {
+    exec(execCommand, function(error, stdout, stderr){
       var errorMsg = null;
       if(error) {errorMsg = error;}
       if(stderr) {errorMsg = stderr;}
