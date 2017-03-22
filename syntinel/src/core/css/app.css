@@ -11,8 +11,14 @@
   color: green;
 }
 
+
 .test-false {
   color: red;
+}
+
+.import-input {
+  margin-left: 10px;
+  padding-left: 30px;
 }
 
 #script {
@@ -104,8 +110,17 @@ h3 {
 
 
 
+
 .blue-cell {
   color: blue;
+  font-weight: bold;
+}
+
+.grey-cell {
+  padding-right: 10px;
+  padding-top: 5px;
+  text-align: right;
+  color: black;
   font-weight: bold;
 }
 

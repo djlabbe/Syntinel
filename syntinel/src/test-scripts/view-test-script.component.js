@@ -17,8 +17,8 @@
             vm.test = resp.data;
             vm.test.name = resp.data.name;
             vm.gridOptions.data = resp.data.results;
-
         });
+
         vm.runTest = function(){
             testScriptSvc.runTest(vm.test).then(function(resp){
                vm.test.results.push(resp.data);

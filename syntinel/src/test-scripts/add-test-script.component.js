@@ -33,9 +33,10 @@
         vm.saveTest = function(){
             if(vm.app && vm.test && vm.test.file && vm.test.description){
                 testScriptSvc.createTest(vm.app, vm.test).then(function(resp){
+                    var url = '/tests/' + vm.app._id;
+                    $location.path(url);
                     testScriptSvc.runTest(resp).then(function(resp) {
-                        var url = '/tests/' + vm.app._id;
-                        $location.path(url);
+                        // Make the /tests/vm.app._id page reload its data?
                     });
                 });
             }
@@ -45,6 +46,8 @@
              vm.test.file = null;
              vm.test.description = "";
              vm.test.name = "";
+             vm.test.scriptType = null;
+             vm.test.frequency = null;
         }
     }
 }());

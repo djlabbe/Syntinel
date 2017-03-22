@@ -42,9 +42,10 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
     created: Date.now(),
     description: req.body.description,
     file: req.file,
-    status: "NOTRUN",
+    status: -1,
+    scriptType: req.body.scriptType,
     parentApp: req.app,
-    frequency: 5000,
+    frequency: req.body.frequency,
     results: []
   };
 
@@ -61,7 +62,6 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
     });
   });
 });
-
 
 /* Retrieve tests along with apps */
 router.get('/app/:app', function(req, res, next) {

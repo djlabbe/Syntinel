@@ -5,16 +5,12 @@ var TestSchema = new mongoose.Schema({
   description: String,
   created: Date,
   file: Object,
-  status: Boolean,
+  status: {type: Number, enum: [-1, 0, 1], default: -1},
+  scriptType: {type: String, enum: ['shell', 'selenium', 'jmeter']},
   filecontents: String,
   parentApp: { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
-
-  // 5sec = 5000, 5 mins = 5 * 60  * 1000
-  frequency: { type: Number, enum: [5000, 30000], default: 30000},
-  results: [{
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'Result'
-  }]
+  frequency: { type: Number, enum: [5, 30, 300, 600, 1800, 3600, 86400]},
+  results: [{type: mongoose.Schema.Types.ObjectId, ref: 'Result'}]
 });
 
 TestSchema.pre('remove', function(next){

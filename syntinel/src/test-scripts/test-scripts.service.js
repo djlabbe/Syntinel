@@ -51,6 +51,7 @@
             return $http.post('/test/' + test._id + '/run', null,
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
+           
         }
         
         function deleteTest(test){

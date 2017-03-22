@@ -17,13 +17,16 @@
                 field:'status',
                 enableFiltering: false,
                 displayName: 'Status',
-                cellTemplate: "<div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div>",
+                cellTemplate: "<div ng-if='row.entity.status == -1'>Not Run</div><div ng-if='row.entity.status == 1'>PASS</div><div ng-if='row.entity.status == 0'>FAIL</div>",
                 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
-                    if (grid.getCellValue(row ,col) === true) {
+                    if (grid.getCellValue(row ,col) === 1) {
                         return 'green-cell';
                     }
-                    else if (grid.getCellValue(row ,col) === false) {
+                    else if (grid.getCellValue(row ,col) === 0) {
                         return 'red-cell';
+                    }
+                    else if (grid.getCellValue(row ,col) === -1) {
+                        return 'grey-cell';
                     }
                 },
                 width: "10%",
