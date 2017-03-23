@@ -23,16 +23,25 @@ router.get('/test/', function(req, res, next) {
   });
 });
 
+
+/* Get all results belonging to a test */
+router.get('/test/:test/results', function(req, res, next) {
+  Result.find( {test_id: req.params.test }, function(err, results){
+    if(err){ return next(err); }
+    return res.json(results);
+  });
+});
+
+
 /* Retrieve results along with tests (populate tests with results) */
 router.get('/test/:test', function(req, res, next) {
   req.test.populate('results', function(err, test) {
-    if (err) { return next(err); } else {
-        fs.readFile(req.test.file.path, 'utf8', function (err,data) {
-            if (err) { return next(err); }
-            test.filecontents = data;
-            return res.json(test);
-        });
-    }
+    if (err) { return next(err); }
+    fs.readFile(req.test.file.path, 'utf8', function (err,data) {
+        if (err) { return next(err); }
+        test.filecontents = data;
+        return res.json(test);
+    });
   });
 });
 

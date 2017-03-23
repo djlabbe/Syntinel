@@ -54,37 +54,31 @@ app.listen(port, function(){
 /***************************************************************************/
 /************************ Timed Script Execution ***************************/
 /***************************************************************************/
-var runQueue = [];
+
 var freqs = [5, 30, 300, 600, 1800, 3600, 86400];
 var openConnections = [];
+
+/* For each interval set up a loop --
+      Every x seconds look up all tests with frequency == x,
+      Iterate through the results, calling .run on each Test,
+      Notify the clients that a new result was generated.
+*/
 
 freqs.forEach(function(freq) {
   setInterval(function () {
     var cursor = Test.find({ frequency: freq }).cursor();
 
     cursor.on('data', function(doc) {
-      runQueue.push(doc);
+      doc.run(function(err, result) {
+        if (err) { return next(err); }
+        openConnections.forEach(function(resp) {
+          resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
+        });
+      });
     });
   }, 1000 * freq); 
 });
 
-setInterval(function () {
-  if(runQueue.length > 0) {
-    var nextTest = runQueue.shift(); // This will become inefficient for large queues (O(n)). 
-                                     // There are options such as http://code.stephenmorley.org/javascript/queues/
-    
-    nextTest.run(function(err, result) {
-      if (err) { return next(err);}
-        // Test ran successfully 
-
-        openConnections.forEach(function(resp) {
-        resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
-    });
-
-
-    });
-  } 
-}, 1000); 
 
 /***************************************************************************/
 /******************* SERVER SENT EVENTS ************************************/
