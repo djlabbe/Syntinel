@@ -103,6 +103,7 @@ router.get('/test/:test', function(req, res, next) {
 //   });
 // });
 
+
 // Removed auth for now...
 // router.post('/test/:test/run', auth, function(req, res, next) {
 router.post('/test/:test/run', function(req, res, next) {
@@ -111,46 +112,9 @@ router.post('/test/:test/run', function(req, res, next) {
     // Execute the script
 
     if (err) { return next(err); }
-
-    // Change the permissions to allow execute
-    fs.chmod(test.file.path, 0777, function(err){
-      if(err) { return next(err); }
-    });
-
-    
-
-    var execCommand = '';
-    if (test.scriptType == 'shell') { execCommand = test.file.path;}
-    if (test.scriptType == 'selenium') { execCommand = 'node ' + test.file.path;}
-  
-    exec(execCommand, (error, stdout, stderr) => {
-      var errorMsg = null;
-      if(error) {errorMsg = error;}
-      if(stderr) {errorMsg = stderr;}
-
-      var didPass = (errorMsg === undefined || errorMsg == null || errorMsg.length <= 0) ? true : false;
-
-      var result = new Result({
-        test_id: test._id,
-        created: Date.now(),
-        status: didPass,
-        output: stdout,
-        error: error || stderr
-      });
-
-      result.save(function(err, result){
-        if(err){ return next(err); }
-
-        // If the result was created then push it to the test
-        test.results.push(result);
-        test.status = didPass ? 1 : 0;
-
-        // And save the test
-        test.save(function(err, test) {
-          if(err){ return next(err); }
-          return res.json(result);
-        });
-      });
+    test.run(function(err, result) {
+      if (err) { return next(err);}
+      return res.json(result);
     });
   });
 });
@@ -205,6 +169,7 @@ router.param('test', function(req, res, next, id) {
     return next();
   });
 });
+
 
 /* Preload a RESULT object by id */
 router.param('result', function(req, res, next, id) {

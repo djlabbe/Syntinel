@@ -21,7 +21,7 @@
 
         vm.runTest = function(){
             testScriptSvc.runTest(vm.test).then(function(resp){
-               vm.test.results.push(resp.data);
+               vm.test.results.push(resp.data[0]);
                vm.message = "Test run complete!"
             });
         };

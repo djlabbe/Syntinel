@@ -1,5 +1,5 @@
-require('./models/Tests');
 require('./models/Results');
+require('./models/Tests');
 require('./models/Users');
 require('./models/Apps');
 require('./config/passport');
@@ -55,14 +55,21 @@ app.listen(port, function(){
   console.log("Server listening on port: ", port);
 });
 
-/* Timed Shell Execution */
+var testFunc = function() {
+  console.log("abcd");
+}
 
+/***************************************************************************/
+/************************ Timed Script Execution ***************************/
+// /***************************************************************************/
 var runQueue = [];
+
 var freqs = [5, 30, 300, 600, 1800, 3600, 86400];
 
 freqs.forEach(function(freq) {
   setInterval(function () {
     var cursor = Test.find({ frequency: freq }).cursor();
+
     cursor.on('data', function(doc) {
       runQueue.push(doc);
     });
@@ -73,11 +80,11 @@ freqs.forEach(function(freq) {
     if(runQueue.length > 0) {
       var nextTest = runQueue.shift(); // This will become inefficient for large queues (O(n)). 
                                        // There are options such as http://code.stephenmorley.org/javascript/queues/
-                     
-      request.post('http://localhost:3000/test/' + nextTest._id + '/run'), function(error, response, body) {
-        if (error) { return next (err) }
-          console.log("RAN TEST: " + nextTest.name);
-      }
+      
+      nextTest.run(function(err, result) {
+        if (err) { return next(err);}
+        console.log("Ran an automatic timed test");
+      });
     }
   }, 1000); 
 
