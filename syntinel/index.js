@@ -1,5 +1,5 @@
-require('./models/Tests');
 require('./models/Results');
+require('./models/Tests');
 require('./models/Users');
 require('./models/Apps');
 require('./config/passport');
@@ -47,6 +47,7 @@ app.use(passport.initialize());
 app.use(require('./routes/index'));
 app.use(require('./routes/apps'));
 app.use(require('./routes/tests'));
+app.use(require('./routes/results'));
 
 var server = http.createServer(app);
 var port = process.env.PORT || 3000;
