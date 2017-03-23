@@ -21,7 +21,7 @@
 
         vm.runTest = function(){
             testScriptSvc.runTest(vm.test).then(function(resp){
-               vm.test.results.push(resp.data);
+               vm.test.results.push(resp.data[0]);
                vm.message = "Test run complete!"
             });
         };
@@ -72,8 +72,29 @@
                 resizable: true
             }
         ];
+
         vm.gridOptions.onRegisterApi = function(gridApi){
             vm.gridApi = gridApi;
         };
+
+
+
+/***************************************************************************/
+/******************* SERVER SENT EVENTS ************************************/
+/***************************************************************************/
+
+         // handles the callback from the received event
+        var handleCallback = function (msg) {
+            var newResult = JSON.parse(msg.data)[0];
+            if (newResult.test_id == vm.test._id)
+            {
+                vm.test.results.push(newResult);   
+            }
+        }
+
+
+        var source = new EventSource('/clientConnection');
+        source.addEventListener('message', handleCallback, false);
+
     }
 }());
