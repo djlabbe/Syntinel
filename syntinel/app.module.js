@@ -11,7 +11,8 @@
             'ui.grid.edit',
             'applications',
             'core',
-            'testScripts'
+            'testScripts',
+            'results'
         ])
         .config(configureApp)
         .run(runApp);

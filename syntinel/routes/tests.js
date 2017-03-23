@@ -48,6 +48,7 @@ router.get('/test/:test', function(req, res, next) {
 router.post('/test/:test/run', auth, function(req, res, next) {
   Test.findById(req.params.test, function (err, test) {
     if (err) { return next(err); }
+
     test.run(function(err, result) {
       if (err) { return next(err);}
       return res.json(result);
