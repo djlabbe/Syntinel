@@ -40,7 +40,7 @@ TestSchema.methods.run = function(cb) {
     var didPass = (errorMsg === undefined || errorMsg == null || errorMsg.length <= 0) ? true : false;
 
     var result = new Result({
-      test_id: this._id,
+      test_id: self._id,
       created: Date.now(),
       status: didPass,
       output: stdout,

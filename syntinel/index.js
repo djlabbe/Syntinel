@@ -56,6 +56,7 @@ app.listen(port, function(){
 /***************************************************************************/
 var runQueue = [];
 var freqs = [5, 30, 300, 600, 1800, 3600, 86400];
+var openConnections = [];
 
 freqs.forEach(function(freq) {
   setInterval(function () {
@@ -75,7 +76,52 @@ setInterval(function () {
     nextTest.run(function(err, result) {
       if (err) { return next(err);}
         // Test ran successfully 
+
+        openConnections.forEach(function(resp) {
+        resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
+    });
+
+
     });
   } 
 }, 1000); 
+
+/***************************************************************************/
+/******************* SERVER SENT EVENTS ************************************/
+/***************************************************************************/
+/* Adapted from https://dzone.com/articles/html5-server-sent-events */
+
+app.get('/clientConnection', function(req, res) {
+
+    // set timeout as high as possible
+    req.socket.setTimeout(Number.MAX_VALUE);
+
+    // send headers for event-stream connection
+    // see spec for more information
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+    });
+
+    res.write('\n');
+
+    // push this res object to our global variable
+    openConnections.push(res);
+
+    // When the request is closed, e.g. the browser window
+    // is closed. We search through the open connections
+    // array and remove this connection.
+    req.on("close", function() {
+        var toRemove;
+        for (var j =0 ; j < openConnections.length ; j++) {
+            if (openConnections[j] == res) {
+                toRemove =j;
+                break;
+            }
+        }
+        openConnections.splice(j,1);
+        console.log(openConnections.length);
+    });
+});
 
