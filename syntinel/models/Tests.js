@@ -21,46 +21,52 @@ TestSchema.pre('remove', function(next){
 });
 
 TestSchema.methods.run = function(cb) {
-  // Change the permissions to allow execute
-  fs.chmod(this.file.path, 0777, function(err){
-    if(err) { return next(err); }
-  });
 
-  var execCommand = '';
-  if (this.scriptType == 'shell') { execCommand = this.file.path;}
-  if (this.scriptType == 'selenium') { execCommand = 'node ' + this.file.path;}
+    fs.chmod(this.file.path, 0777);
 
-  var self = this;
+    var execCommand = '';
+    if (this.scriptType == 'shell') { execCommand = this.file.path;}
+    if (this.scriptType == 'selenium') { execCommand = 'node ' + this.file.path;}
 
-  exec(execCommand, function(error, stdout, stderr) {
-    var errorMsg = null;
-    if(error) {errorMsg = error;}
-    if(stderr) {errorMsg = stderr;}
+    var self = this;
 
-    var didPass = (errorMsg === undefined || errorMsg == null || errorMsg.length <= 0) ? true : false;
+    exec(execCommand, function(error, stdout, stderr) {
+      var errorMsg = null;
+      if(error) {errorMsg = error;}
+      if(stderr) {errorMsg = stderr;}
 
-    var result = new Result({
-      test_id: self._id,
-      created: Date.now(),
-      status: didPass,
-      output: stdout,
-      error: error || stderr
-    });
+      var didPass = (errorMsg === undefined || errorMsg == null || errorMsg.length <= 0) ? true : false;
 
-    result.save(function(err, result){
-      if(err){ return next(err); }
+      var result = new Result({
+        test_id: self._id,
+        created: Date.now(),
+        status: didPass,
+        output: stdout,
+        error: error || stderr
+      });
 
-      // If the result was created then push it to the test
-      self.results.push(result);
-      self.status = didPass ? 1 : 0;
+      /* BUG: If a test is mid run, and gets deleted, a result will still
+         be created here in the database. The inside function that updates the test
+         will generate an error and return however. */
+      // Check if the test still exists?
+      result.save(function(err, result){
+        if(err){ return handleErr(err); }
 
-      // And save the test
-      self.save(function(err, test) {
-        if(err){ return next(err); }
-        return Result.find({ _id: result._id }, cb);
+        // If the result was created then push it to the test
+        self.results.push(result);
+        self.status = didPass ? 1 : 0;
+
+        // And save the test
+        self.save(function(err, test) {
+          if(err){ return handleErr(err); }
+          return Result.find({ _id: result._id }, cb);
+        });
       });
     });
-  });
+}
+
+var handleErr = function(err) {
+  console.log("Got an error");
 }
 
 
