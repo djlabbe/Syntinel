@@ -1,5 +1,5 @@
-require('./models/Tests');
 require('./models/Results');
+require('./models/Tests');
 require('./models/Users');
 require('./models/Apps');
 require('./config/passport');
@@ -16,11 +16,9 @@ var passport = require('passport');
 var bodyParser = require('body-parser');
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
 var MongoDB = mongoose.connect(mongoURI).connection;
-
 var Test = mongoose.model('Test');
 
 var app = express();
-
 
 MongoDB.on('error', function (err) {
   if (err) {
@@ -34,7 +32,6 @@ MongoDB.once('open', function () {
   console.log('mongodb connection open');
 });
 
-// uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'src', 'favicon.ico')));
 app.use(express.static(__dirname + '/'));
 app.use(morgan('dev'));
@@ -43,7 +40,6 @@ app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(cookieParser());
 app.use(passport.initialize());
 
-/* routes modularity */
 app.use(require('./routes/index'));
 app.use(require('./routes/apps'));
 app.use(require('./routes/tests'));
@@ -55,29 +51,71 @@ app.listen(port, function(){
   console.log("Server listening on port: ", port);
 });
 
-/* Timed Shell Execution */
+/***************************************************************************/
+/************************ Timed Script Execution ***************************/
+/***************************************************************************/
 
-var runQueue = [];
 var freqs = [5, 30, 300, 600, 1800, 3600, 86400];
+var openConnections = [];
+
+/* For each interval set up a loop --
+      Every x seconds look up all tests with frequency == x,
+      Iterate through the results, calling .run on each Test,
+      Notify the clients that a new result was generated.
+*/
 
 freqs.forEach(function(freq) {
   setInterval(function () {
     var cursor = Test.find({ frequency: freq }).cursor();
+
     cursor.on('data', function(doc) {
-      runQueue.push(doc);
+      doc.run(function(err, result) {
+        if (err) { return next(err); }
+        openConnections.forEach(function(resp) {
+          resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
+        });
+      });
     });
   }, 1000 * freq); 
 });
 
- setInterval(function () {
-    if(runQueue.length > 0) {
-      var nextTest = runQueue.shift(); // This will become inefficient for large queues (O(n)). 
-                                       // There are options such as http://code.stephenmorley.org/javascript/queues/
-                     
-      request.post('http://localhost:3000/test/' + nextTest._id + '/run'), function(error, response, body) {
-        if (error) { return next (err) }
-          console.log("RAN TEST: " + nextTest.name);
-      }
-    }
-  }, 1000); 
+
+/***************************************************************************/
+/******************* SERVER SENT EVENTS ************************************/
+/***************************************************************************/
+/* Adapted from https://dzone.com/articles/html5-server-sent-events */
+
+app.get('/clientConnection', function(req, res) {
+
+    // set timeout as high as possible
+    req.socket.setTimeout(Number.MAX_VALUE);
+
+    // send headers for event-stream connection
+    // see spec for more information
+    res.writeHead(200, {
+        'Content-Type': 'text/event-stream',
+        'Cache-Control': 'no-cache',
+        'Connection': 'keep-alive'
+    });
+
+    res.write('\n');
+
+    // push this res object to our global variable
+    openConnections.push(res);
+
+    // When the request is closed, e.g. the browser window
+    // is closed. We search through the open connections
+    // array and remove this connection.
+    req.on("close", function() {
+        var toRemove;
+        for (var j =0 ; j < openConnections.length ; j++) {
+            if (openConnections[j] == res) {
+                toRemove =j;
+                break;
+            }
+        }
+        openConnections.splice(j,1);
+        console.log(openConnections.length);
+    });
+});
 
