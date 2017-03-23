@@ -16,11 +16,9 @@ var passport = require('passport');
 var bodyParser = require('body-parser');
 var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
 var MongoDB = mongoose.connect(mongoURI).connection;
-
 var Test = mongoose.model('Test');
 
 var app = express();
-
 
 MongoDB.on('error', function (err) {
   if (err) {
@@ -34,7 +32,6 @@ MongoDB.once('open', function () {
   console.log('mongodb connection open');
 });
 
-// uncomment after placing your favicon in /public
 app.use(favicon(path.join(__dirname, 'src', 'favicon.ico')));
 app.use(express.static(__dirname + '/'));
 app.use(morgan('dev'));
@@ -43,7 +40,6 @@ app.use(bodyParser.urlencoded({'extended':'true'}));
 app.use(cookieParser());
 app.use(passport.initialize());
 
-/* routes modularity */
 app.use(require('./routes/index'));
 app.use(require('./routes/apps'));
 app.use(require('./routes/tests'));
@@ -55,15 +51,10 @@ app.listen(port, function(){
   console.log("Server listening on port: ", port);
 });
 
-var testFunc = function() {
-  console.log("abcd");
-}
-
 /***************************************************************************/
 /************************ Timed Script Execution ***************************/
-// /***************************************************************************/
+/***************************************************************************/
 var runQueue = [];
-
 var freqs = [5, 30, 300, 600, 1800, 3600, 86400];
 
 freqs.forEach(function(freq) {
@@ -76,15 +67,15 @@ freqs.forEach(function(freq) {
   }, 1000 * freq); 
 });
 
- setInterval(function () {
-    if(runQueue.length > 0) {
-      var nextTest = runQueue.shift(); // This will become inefficient for large queues (O(n)). 
-                                       // There are options such as http://code.stephenmorley.org/javascript/queues/
-      
-      nextTest.run(function(err, result) {
-        if (err) { return next(err);}
-        console.log("Ran an automatic timed test");
-      });
-    }
-  }, 1000); 
+setInterval(function () {
+  if(runQueue.length > 0) {
+    var nextTest = runQueue.shift(); // This will become inefficient for large queues (O(n)). 
+                                     // There are options such as http://code.stephenmorley.org/javascript/queues/
+    
+    nextTest.run(function(err, result) {
+      if (err) { return next(err);}
+        // Test ran successfully 
+    });
+  } 
+}, 1000); 
 
