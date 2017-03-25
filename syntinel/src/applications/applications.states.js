@@ -6,15 +6,20 @@
 
     function configApps($stateProvider){
         $stateProvider
-            .state("applications",{
-                url: "/applications",
-                template: '<applications-comp></applications-comp>',
-                component: 'applicationsComp'
+            .state("apps",{
+                url: "/apps",
+                template: '<apps></apps>',
+                component: 'apps'
             })
-            .state("addApplication",{
-                url:"/addApplication",
-                template: '<add-application-comp></add-application-comp>',
-                component: 'addApplicationComp'
+            .state('app', {
+                url: '/apps/:id',
+                template: '<app></app>',
+                component: 'app'
+            })
+             .state("addApp",{
+                url:"/addApp",
+                template: '<addApp></addApp>',
+                component: 'addApp'
             });
     }
 }());

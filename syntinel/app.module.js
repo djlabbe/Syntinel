@@ -20,7 +20,7 @@
     /* @ngInject */
     function configureApp($urlRouterProvider) {
         $urlRouterProvider
-            .when("", "applications");
+            .when("", "apps");
     }
     function runApp(authenticationSvc, $rootScope, $location){
         $rootScope.$on("$stateChangeStart", function(evt, args){

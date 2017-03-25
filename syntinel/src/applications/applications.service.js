@@ -15,7 +15,7 @@
         function getApp(id) {
             var deferred = $q.defer();
             $http({
-                url: "/app/" + id,
+                url: "/apps/" + id,
                 method: "GET"
             }).then(function(data){
                 deferred.resolve(data);
@@ -29,7 +29,7 @@
         function getAllApps() {
             var deferred = $q.defer();
             $http({
-                url: "/app/getAll",
+                url: "/apps",
                 method: "GET"
             }).then(function(data){
                 deferred.resolve(data);
@@ -52,7 +52,7 @@
             }
             var deferred = $q.defer();
             $http({
-                url: "/app/save",
+                url: "/apps",
                 method: "POST",
                 data: app
             }).then(function(data){

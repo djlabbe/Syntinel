@@ -15,81 +15,6 @@ var Test = mongoose.model('Test');
 var Result = mongoose.model('Result');
 var App = mongoose.model('App');
 
-/* Get all tests */
-router.get('/test/', function(req, res, next) {
-  Test.find(function(err, tests){
-    if(err){ return next(err); }
-    return res.json(tests);
-  });
-});
-
-/* Get all results belonging to a test */
-router.get('/test/:test/results', function(req, res, next) {
-  Result.find( {test_id: req.params.test }, function(err, results){
-    if(err){ return next(err); }
-    return res.json(results);
-  });
-});
-
-/* Get a single test */
-router.get('/test/:test', function(req, res, next) {
-  Test.findById(req.params.test, function(err, test) {
-     if (err) { return next(err); }
-     return res.json(test);
-  });
-});
-
-/* Run a test */
-router.post('/test/:test/run', auth, function(req, res, next) {
-  Test.findById(req.params.test, function (err, test) {
-    if (err) { return next(err); }
-
-    test.run(function(err, result) {
-      if (err) { return next(err);}
-      return res.json(result);
-    });
-  });
-});
-
-/* Toggle isActive */
-router.put('/test/:test', auth, function(req, res, next) {
-  var test = req.test;
-  console.log(test);
-  test.isActive = !test.isActive;
-  test.save(function(err, test) {
-    return res.json(test);
-  });
-});
-
-
-/* Delete a test */
-router.delete('/test/:test/delete', function (req, res, next) {
-    Test.findById(req.params.test, function(err, test){
-      if(err){
-        return next(err);
-      } else if (!test){
-          return console.log("Test not found.");
-      }
-      // Remove from db
-      test.remove();
-
-      // Remove File from System
-      fs.unlinkSync(test.file.path);
-
-      App.findById(test.app, function(err, app) {
-        if (err){ return next(err);}
-        var index = app.tests.indexOf(test.id);
-        if (index > -1) {
-          app.tests.splice(index, 1);
-        }
-        app.save(function(err, app) {
-          if(err){ return next(err);}
-          return res.json(test);
-        });
-      });
-    });
-});
-
 /* Preload a TEST object by id */
 router.param('test', function(req, res, next, id) {
   var query = Test.findById(id);
@@ -101,17 +26,79 @@ router.param('test', function(req, res, next, id) {
   });
 });
 
-/* Preload a RESULT object by id */
-router.param('result', function(req, res, next, id) {
-  var query = Result.findById(id);
-
-  query.exec(function (err, test){
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find result')); }
-
-    req.result = result;
-    return next();
+/* Get all tests */
+router.get('/tests/', function(req, res, next) {
+  Test.find(function(err, tests){
+    if(err){ return next(err); }
+    return res.json(tests);
   });
 });
+
+/* Get a single test */
+router.get('/tests/:test', function(req, res, next) {
+  Test.findById(req.params.test, function(err, test) {
+     if (err) { return next(err); }
+     return res.json(test);
+  });
+});
+
+/* Run a test */
+router.post('/tests/:test/run', auth, function(req, res, next) {
+  Test.findById(req.params.test, function (err, test) {
+    if (err) { return next(err); }
+
+    test.run(function(err, result) {
+      if (err) { return next(err);}
+      return res.json(result);
+    });
+  });
+});
+
+/* Toggle isActive */
+router.put('/tests/:test', auth, function(req, res, next) {
+  var test = req.test;
+  test.isActive = !test.isActive;
+  test.save(function(err, test) {
+    return res.json(test);
+  });
+});
+
+/* Delete a test */
+router.delete('/tests/:test', function (req, res, next) {
+  Test.findById(req.params.test, function(err, test){
+    if(err){
+      return next(err);
+    } else if (!test){
+        return console.log("Test not found.");
+    }
+    // Remove from db
+    test.remove();
+
+    // Remove File from System
+    fs.unlinkSync(test.file.path);
+
+    App.findById(test.app, function(err, app) {
+      if (err){ return next(err);}
+      var index = app.tests.indexOf(test.id);
+      if (index > -1) {
+        app.tests.splice(index, 1);
+      }
+      app.save(function(err, app) {
+        if(err){ return next(err);}
+        return res.json(test);
+      });
+    });
+  });
+});
+
+/* Get all results belonging to a test */
+router.get('/tests/:test/results', function(req, res, next) {
+  Result.find( {test_id: req.params.test }, function(err, results){
+    if(err){ return next(err); }
+    return res.json(results);
+  });
+});
+
+
 
 module.exports = router;

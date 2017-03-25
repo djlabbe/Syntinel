@@ -3,13 +3,13 @@
 
     angular
         .module('applications')
-        .component('applicationsComp',{
+        .component('apps',{
             templateUrl: 'src/applications/applications.tmpl.html',
-            controller: applicationsCtrl
+            controller: ApplicationsController
         });
 
     /* @ngInject */
-    function applicationsCtrl(applicationSvc, $location, $scope, $state){
+    function ApplicationsController(applicationSvc, $location, $scope, $state){
         var vm = this;
         vm.gridOptions = {enableFiltering: true};
 
@@ -32,7 +32,7 @@
             },{
                 field:'name',
                 displayName:'Name',
-                cellTemplate: '<div class="clickable" ng-click="grid.appScope.test(row.entity)">{{row.entity.name}}</div>',
+                cellTemplate: '<div class="clickable" ng-click="grid.appScope.apps(row.entity)">{{row.entity.name}}</div>',
                 cellClass: 'blue-cell',
                 width: "17%",
                 resizable: true
@@ -67,8 +67,8 @@
             vm.gridOptions.data = apps.data;
         });
 
-        $scope.test = function(row){
-            var url = '/tests/' + row._id;
+        $scope.apps = function(row){
+            var url = '/apps/' + row._id;
             $location.path(url);
         };
     }

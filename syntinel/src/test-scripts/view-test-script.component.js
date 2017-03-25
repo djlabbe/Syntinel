@@ -29,7 +29,7 @@
         };
         vm.deleteTest = function(){
             testScriptSvc.deleteTest(vm.test).then(function(resp){
-                $location.path('/tests/' + resp.data.app);
+                $location.path('/apps/' + resp.data.app);
             });
         };
 

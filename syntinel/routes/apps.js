@@ -14,17 +14,37 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'}); // Change 'SECRET'
 var Test = mongoose.model('Test');
 var App = mongoose.model('App');
 
+/* Preload a APP object by id */
+router.param('app', function(req, res, next, id) {
+  var query = App.findById(id);
+
+  query.exec(function (err, app){
+    if (err) { return next(err); }
+    if (!app) { return next(new Error('can\'t find app')); }
+
+    req.app = app;
+    return next();
+  });
+});
 
 /* Get all apps */
-router.get('/app/getAll', function(req, res, next) {
+router.get('/apps', function(req, res, next) {
   App.find(function(err, apps){
     if(err){ return next(err); }
     return res.json(apps);
   });
 });
 
+/* Get single app by id */
+router.get('/apps/:app', function(req, res, next) {
+  req.app.populate('tests', function(err, app) {
+    if (err) { return next(err); }
+    return res.json(app);
+  });
+});
+
 /* Save a new app */
-router.post('/app/save', function(req, res, next) {
+router.post('/apps', function(req, res, next) {
   var app = new App(req.body);
   app.save(function(err, app){
     if(err){ return next(err); }
@@ -62,30 +82,6 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
         return res.json(test);
       });
     });
-  });
-});
-
-
-/* Retrieve tests along with apps */
-router.get('/app/:app', function(req, res, next) {
-  req.app.populate('tests', function(err, app) {
-    if (err) { return next(err); }
-
-    return res.json(app);
-  });
-});
-
-
-/* Preload a APP object by id */
-router.param('app', function(req, res, next, id) {
-  var query = App.findById(id);
-
-  query.exec(function (err, app){
-    if (err) { return next(err); }
-    if (!app) { return next(new Error('can\'t find app')); }
-
-    req.app = app;
-    return next();
   });
 });
 

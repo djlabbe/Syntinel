@@ -1,13 +1,14 @@
 (function(){
+    "use strict";
     angular
-        .module('testScripts')
-        .component('manageTestsComp',{
-            templateUrl:'src/test-scripts/manage-test-scripts.tmpl.html',
-            controller: ManageScripts
+        .module('applications')
+        .component('app',{
+            templateUrl:'src/applications/application.tmpl.html',
+            controller: ApplicationController
         });
 
     /* @ngInject */
-    function ManageScripts(applicationSvc, $stateParams, $location, testScriptSvc, $scope){
+    function ApplicationController(applicationSvc, $stateParams, $location, testScriptSvc, $scope){
         var vm = this;
         vm.message = "";
         vm.errorMessage = "";
@@ -104,7 +105,7 @@
             vm.message = "Test run complete!";
         };
         $scope.viewTest = function(row){
-            var url = '/tests/test/' + row._id;
+            var url = '/tests/' + row._id;
             $location.path(url);
         }
     }
