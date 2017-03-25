@@ -141,9 +141,21 @@ h3 {
   background-color: #ff3300 !important
 }
 
+.active-cell {
+  font-weight: bold;
+  color: green; !important
+}
+
+.inactive-cell {
+  font-weight: bold;
+  color: red; !important
+}
+
 .ui-grid {
   margin-bottom: 15px;
 }
 .ui-grid-cell{
   padding-left: 5px;
 }
+
+

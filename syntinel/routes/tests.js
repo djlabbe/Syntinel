@@ -23,7 +23,6 @@ router.get('/test/', function(req, res, next) {
   });
 });
 
-
 /* Get all results belonging to a test */
 router.get('/test/:test/results', function(req, res, next) {
   Result.find( {test_id: req.params.test }, function(err, results){
@@ -32,19 +31,15 @@ router.get('/test/:test/results', function(req, res, next) {
   });
 });
 
-
-/* Retrieve results along with tests (populate tests with results) */
+/* Get a single test */
 router.get('/test/:test', function(req, res, next) {
-  req.test.populate('results', function(err, test) {
-    if (err) { return next(err); }
-    fs.readFile(req.test.file.path, 'utf8', function (err,data) {
-        if (err) { return next(err); }
-        test.filecontents = data;
-        return res.json(test);
-    });
+  Test.findById(req.params.test, function(err, test) {
+     if (err) { return next(err); }
+     return res.json(test);
   });
 });
 
+/* Run a test */
 router.post('/test/:test/run', auth, function(req, res, next) {
   Test.findById(req.params.test, function (err, test) {
     if (err) { return next(err); }
@@ -55,6 +50,18 @@ router.post('/test/:test/run', auth, function(req, res, next) {
   });
 });
 
+/* Toggle isActive */
+router.put('/test/:test', auth, function(req, res, next) {
+  var test = req.test;
+  console.log(test);
+  test.isActive = !test.isActive;
+  test.save(function(err, test) {
+    return res.json(test);
+  });
+});
+
+
+/* Delete a test */
 router.delete('/test/:test/delete', function (req, res, next) {
     Test.findById(req.params.test, function(err, test){
       if(err){
@@ -68,7 +75,7 @@ router.delete('/test/:test/delete', function (req, res, next) {
       // Remove File from System
       fs.unlinkSync(test.file.path);
 
-      App.findById(test.parentApp, function(err, app) {
+      App.findById(test.app, function(err, app) {
         if (err){ return next(err);}
         var index = app.tests.indexOf(test.id);
         if (index > -1) {
@@ -85,11 +92,9 @@ router.delete('/test/:test/delete', function (req, res, next) {
 /* Preload a TEST object by id */
 router.param('test', function(req, res, next, id) {
   var query = Test.findById(id);
-
   query.exec(function (err, test){
     if (err) { return next(err); }
     if (!test) { return next(new Error('can\'t find test')); }
-
     req.test = test;
     return next();
   });

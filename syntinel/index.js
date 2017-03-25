@@ -69,12 +69,14 @@ freqs.forEach(function(freq) {
     var cursor = Test.find({ frequency: freq }).cursor();
 
     cursor.on('data', function(doc) {
-      doc.run(function(err, result) {
-        if (err) { return next(err); }
-        openConnections.forEach(function(resp) {
-          resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
+      if(doc.isActive) {
+        doc.run(function(err, result) {
+          if (err) { return next(err); }
+          openConnections.forEach(function(resp) {
+            resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
+          });
         });
-      });
+      }
     });
   }, 1000 * freq); 
 });

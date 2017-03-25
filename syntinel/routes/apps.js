@@ -1,5 +1,6 @@
 var express = require('express');
 var router = express.Router();
+var fs = require('fs'); //filesystem
 var mongoose = require('mongoose');
 var passport = require('passport');
 var jwt = require('express-jwt');
@@ -25,7 +26,6 @@ router.get('/app/getAll', function(req, res, next) {
 /* Save a new app */
 router.post('/app/save', function(req, res, next) {
   var app = new App(req.body);
-
   app.save(function(err, app){
     if(err){ return next(err); }
     return res.json(app);
@@ -34,34 +34,37 @@ router.post('/app/save', function(req, res, next) {
 
 /* Save a new test, update the app*/
 router.post('/app/:app/tests', upload.single('file'), function (req, res, next) {
-  console.log(req.body);
-  console.log(req.file);
+  fs.readFile(req.file.path, 'utf8', function (err,data) {
+    if (err) { return next(err); }
+    var filecontents = filecontents = data;
+    var testData = {
+      name: req.body.name,
+      created: Date.now(),
+      description: req.body.description,
+      file: req.file,
+      filecontents: filecontents,
+      status: -1, // -1 = not run
+      scriptType: req.body.scriptType,
+      app: req.app,
+      frequency: req.body.frequency,
+      results: [],
+      isActive: true
+    };
 
-  var testData = {
-    name: req.body.name,
-    created: Date.now(),
-    description: req.body.description,
-    file: req.file,
-    status: -1,
-    scriptType: req.body.scriptType,
-    parentApp: req.app,
-    frequency: req.body.frequency,
-    results: []
-  };
+    var test = new Test(testData);
 
-  var test = new Test(testData);
-
-  test.save(function (err, test) {
-    if (err) {return next(err); }
-
-    req.app.tests.push(test);
-    req.app.save(function(err, app) {
+    test.save(function (err, test) {
       if (err) {return next(err); }
+        req.app.tests.push(test);
+        req.app.save(function(err, app) {
+        if (err) {return next(err); }
 
-      return res.json(test);
+        return res.json(test);
+      });
     });
   });
 });
+
 
 /* Retrieve tests along with apps */
 router.get('/app/:app', function(req, res, next) {

@@ -16,22 +16,28 @@
         testScriptSvc.getTest($stateParams.testId).then(function(resp){
             vm.test = resp.data;
             vm.test.name = resp.data.name;
-            vm.gridOptions.data = resp.data.results;
+            testScriptSvc.getResults($stateParams.testId).then(function(resp){
+            vm.gridOptions.data = resp.data;
+            });
         });
 
         vm.runTest = function(){
             testScriptSvc.runTest(vm.test).then(function(resp){
-               vm.test.results.push(resp.data[0]);
+            vm.gridOptions.data.push(resp.data[0]);
                vm.message = "Test run complete!"
             });
         };
         vm.deleteTest = function(){
-            console.log("About to call testScriptSvc.deleteTest...");
             testScriptSvc.deleteTest(vm.test).then(function(resp){
-                $location.path('/tests/' + resp.data.parentApp);
+                $location.path('/tests/' + resp.data.app);
             });
         };
 
+        vm.toggleActive = function() {
+            testScriptSvc.toggleActive(vm.test).then(function(resp){
+                vm.test = resp.data;
+            });
+        }
 
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
@@ -85,7 +91,7 @@
             var newResult = JSON.parse(msg.data)[0];
             if (newResult.test_id == vm.test._id)
             {
-                vm.test.results.push(newResult);   
+                vm.gridOptions.data.push(newResult);   
             }
         }
 

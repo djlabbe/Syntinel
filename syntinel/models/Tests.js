@@ -5,15 +5,15 @@ var exec = require('child_process').exec;
 
 var TestSchema = new mongoose.Schema({
   name: String,
+  app: { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
   description: String,
   created: Date,
   file: Object,
   status: {type: Number, enum: [-1, 0, 1], default: -1},
   scriptType: {type: String, enum: ['shell', 'selenium', 'jmeter']},
   filecontents: String,
-  parentApp: { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
   frequency: { type: Number, enum: [5, 30, 300, 600, 1800, 3600, 86400]},
-  results: [{type: mongoose.Schema.Types.ObjectId, ref: 'Result'}]
+  isActive: Boolean
 });
 
 TestSchema.pre('remove', function(next){
@@ -21,7 +21,7 @@ TestSchema.pre('remove', function(next){
 });
 
 TestSchema.methods.run = function(cb) {
-
+  
     fs.chmod(this.file.path, 0777);
 
     var execCommand = '';
@@ -47,13 +47,16 @@ TestSchema.methods.run = function(cb) {
 
       /* BUG: If a test is mid run, and gets deleted, a result will still
          be created here in the database. The inside function that updates the test
-         will generate an error and return however. */
+         will generate an error and return safely however. */
+
       // Check if the test still exists?
+      // Some sources recommend allowing these records to be created and just scheduling
+      // a regular DB cleaning function to delete them.
+
       result.save(function(err, result){
         if(err){ return handleErr(err); }
 
         // If the result was created then push it to the test
-        self.results.push(result);
         self.status = didPass ? 1 : 0;
 
         // And save the test

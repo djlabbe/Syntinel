@@ -54,6 +54,14 @@
                 field: 'frequency',
                 enableFiltering: false,
                 displayName: 'Schedule',
+                cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
+                    if (row.entity.isActive === true) {
+                        return 'active-cell';
+                    }
+                    else if (row.entity.isActive === false) {
+                        return 'inactive-cell';
+                    }
+                },
                 width: "12%"
             }
         ];
