@@ -7,7 +7,7 @@
         });
 
     /* @ngInject */
-    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc) {
+    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc, $scope) {
         var vm = this;
         vm.test = {};
         vm.message = "";
@@ -39,12 +39,18 @@
             });
         }
 
+        // $scope.results = function(result){
+        //     var url = '/tests/results/' + result._id;
+        //     $location.path(url);
+        // };
+
+
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
             {
                 field:'status',
                 displayName: 'Status',
-                cellTemplate: "<div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div>",
+                cellTemplate: "<div class='clickable' ng-click='grid.appScope.results(row.entity)'><div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div></div>",
                 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                     if (grid.getCellValue(row ,col) === true) {
                         return 'green-cell';
