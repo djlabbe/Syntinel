@@ -14,7 +14,7 @@ Creating a branch
     - This will copy dev environment into your own branch
 
 Pushing
-    - Once ready ready to push commit all changes
+    - Once ready ready to push, commit all changes
     - IMPORTANT: Make sure to pull from the branch you are about to push into
         EX.) If pushing to dev, pull from dev first
     - Resolve any merge conflicts if any
