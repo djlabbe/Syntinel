@@ -39,12 +39,6 @@
             });
         }
 
-        // $scope.results = function(result){
-        //     var url = '/tests/results/' + result._id;
-        //     $location.path(url);
-        // };
-
-
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [
             {
