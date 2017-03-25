@@ -18,7 +18,7 @@
             })
              .state("addApp",{
                 url:"/addApp",
-                template: '<addApp></addApp>',
+                template: '<add-app></add-app>',
                 component: 'addApp'
             });
     }
