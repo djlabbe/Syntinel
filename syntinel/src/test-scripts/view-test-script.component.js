@@ -7,7 +7,7 @@
         });
 
     /* @ngInject */
-    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc, resultSvc) {
+    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc, resultSvc, $scope) {
         var vm = this;
         vm.test = {};
         vm.message = "";
@@ -84,6 +84,12 @@
         vm.gridOptions.onRegisterApi = function(gridApi){
             vm.gridApi = gridApi;
         };
+
+        $scope.results = function(row){
+            var url = "/tests/results/" + row._id;
+            $location.path(url);
+        };
+
 
 
 
