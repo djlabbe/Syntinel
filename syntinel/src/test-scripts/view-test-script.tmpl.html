@@ -5,6 +5,7 @@
             <div class="pull-center">
                 <h3 class="test-{{$ctrl.test.results[$ctrl.test.results.length-1].status}}">{{$ctrl.test.name}}
                  <button type="button" class="btn btn-danger a-title-btn" ng-click="$ctrl.deleteTest()">Delete Test</button>
+                 <button type="button" class="btn btn-danger a-title-btn" ng-click="$ctrl.clearResults()">Clear Results</button>
                  <button ng-show="$ctrl.test.isActive" type="button" class="btn btn-danger a-title-btn" ng-click="$ctrl.toggleActive()">Deactivate Test</button>
                  <button ng-hide="$ctrl.test.isActive" type="button" class="btn btn-success a-title-btn" ng-click="$ctrl.toggleActive()">Activate Test</button>
                  <button type="button" class="btn btn-primary a-title-btn" ng-click="$ctrl.runTest()">Run Test</button>

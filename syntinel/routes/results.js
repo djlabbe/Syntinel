@@ -26,4 +26,12 @@ router.get('/tests/results/:results', function(req, res, next) {
     });
 });
 
+router.delete('/clearResults/:testID', function (req, res, next) {
+    Result.remove({test_id: req.params.testID}, function(err, removed){
+      if(err){ return next(err); }
+      console.log(removed + " Results cleared for test id: " + req.params.testID);
+      res.send(true);
+    });
+});
+
 module.exports = router;

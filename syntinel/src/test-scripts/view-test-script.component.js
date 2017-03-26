@@ -7,7 +7,7 @@
         });
 
     /* @ngInject */
-    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc, $scope) {
+    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc, resultSvc) {
         var vm = this;
         vm.test = {};
         vm.message = "";
@@ -37,7 +37,12 @@
             testScriptSvc.toggleActive(vm.test).then(function(resp){
                 vm.test = resp.data;
             });
-        }
+        };
+        vm.clearResults = function(){
+            resultSvc.clearResults(vm.test._id).then(function(resp){
+                vm.gridOptions.data = [];
+            });
+        };
 
         vm.gridOptions = {};
         vm.gridOptions.columnDefs = [

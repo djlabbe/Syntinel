@@ -3,9 +3,10 @@
         .module('results')
         .factory('resultSvc', ResultsSvc);
 
-    function ResultsSvc($http, $q, authenticationSvc) {
+    function ResultsSvc($http) {
         var svc = {
-            getResult: getResult
+            getResult: getResult,
+            clearResults: clearResults
         };
         return svc;
 
@@ -14,6 +15,13 @@
             return $http({
                 url: "/tests/results/" + id,
                 method: "GET"
+            });
+        }
+
+        function clearResults(id){
+            return $http({
+                url: "/clearResults/" + id,
+                method: "DELETE"
             });
         }
     }
