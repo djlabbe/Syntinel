@@ -46,6 +46,10 @@ router.get('/test/:test', function(req, res, next) {
 });
 
 router.post('/test/:test/run', auth, function(req, res, next) {
+
+  console.log("TEST HAS BEEN TOLLED TO RUN");
+  console.log(req.params.test);
+
   Test.findById(req.params.test, function (err, test) {
     if (err) { return next(err); }
 

@@ -35,6 +35,9 @@
                 .get('/test/' + id);
         }
         function createTest(app, test){
+
+            console.log("Test has been created.");
+
             var deferred = $q.defer();
             Upload.upload({
                 url: '/app/' + app._id + '/tests',
@@ -48,6 +51,9 @@
             return deferred.promise;
         }
         function runTest(test){
+
+            console.log("Run test has been called.");
+
             return $http.post('/test/' + test._id + '/run', null,
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });

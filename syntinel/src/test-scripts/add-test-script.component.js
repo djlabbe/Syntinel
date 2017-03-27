@@ -31,6 +31,9 @@
                 to run the test on submission. Once that is done, we redirect
                 back to app page */
         vm.saveTest = function(){
+
+            console.log("Save test has been called.");
+
             if(vm.app && vm.test && vm.test.file && vm.test.description){
                 testScriptSvc.createTest(vm.app, vm.test).then(function(resp){
                     var url = '/tests/' + vm.app._id;

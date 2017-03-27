@@ -34,33 +34,57 @@ router.post('/app/save', function(req, res, next) {
 
 /* Save a new test, update the app*/
 router.post('/app/:app/tests', upload.single('file'), function (req, res, next) {
+
   console.log(req.body);
   console.log(req.file);
+    var fs = require('fs');
 
-  var testData = {
-    name: req.body.name,
-    created: Date.now(),
-    description: req.body.description,
-    file: req.file,
-    status: -1,
-    scriptType: req.body.scriptType,
-    parentApp: req.app,
-    frequency: req.body.frequency,
-    results: []
-  };
+    var originalName = req.file.originalname;
+    var currentPath = req.file.path;
 
-  var test = new Test(testData);
 
-  test.save(function (err, test) {
-    if (err) {return next(err); }
 
-    req.app.tests.push(test);
-    req.app.save(function(err, app) {
-      if (err) {return next(err); }
 
-      return res.json(test);
+    fs.rename(currentPath, 'tests\\'.concat(originalName), function(error){
+
+      if(error){
+          console.log("There was an error renaming the submitted file.");
+      }
+
+        req.file.path = 'tests\\'.concat(originalName);
+        req.file.filename = originalName;
+
+
+        var testData = {
+            name: req.body.name,
+            created: Date.now(),
+            description: req.body.description,
+            file: req.file,
+            status: -1,
+            scriptType: req.body.scriptType,
+            parentApp: req.app,
+            frequency: req.body.frequency,
+            results: []
+        };
+
+        var test = new Test(testData);
+
+        test.save(function (err, test) {
+            if (err) {return next(err); }
+
+            req.app.tests.push(test);
+            req.app.save(function(err, app) {
+                if (err) {return next(err); }
+
+                return res.json(test);
+            });
+        });
+
+
+
     });
-  });
+
+
 });
 
 /* Retrieve tests along with apps */
