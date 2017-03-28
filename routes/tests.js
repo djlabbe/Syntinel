@@ -50,25 +50,29 @@ router.post('/tests/:test/run', auth, function(req, res, next) {
     test.run(function(err, result) {
       if (err) { return next(err);}
 
+      /* Update application status based on most recent test run */
       App.findById(test.app, function (err, app) {
-        var idx = app.failedTests.indexOf(test._id);
+        /* Get index of current test in the failedTests array */
+        /* May or may not be present */
+        var idx = app.failedTests.indexOf(test._id); 
 
-        if (result[0].status == false) {
-          app.status = false;
-          if (idx < 0) {
-            app.failedTests.push(test._id)
+        if (result[0].status == false) { // If our test execution was fail
+          app.status = false;  // Application status is now fail
+          if (idx < 0) { // if the test was not already known to be fail
+            app.failedTests.push(test._id) // add it
           }
         } 
 
-        else { // test passed
-          if (idx >= 0) {
-            app.failedTests.splice(idx, 1);
-            if (app.failedTests.length == 0) {
-              app.status = true;
+        else { 
+          if (idx >= 0) { // test passed and WAS PREVIOUSLY FAILING
+            app.failedTests.splice(idx, 1); // remove it from list of failing tests
+            if (app.failedTests.length == 0) { // if the array is NOW empty
+              app.status = true; // the app is green again
             }
           }
         }
 
+        // save it
         app.save(function(err, test) {
         if(err) { return next(err); }
            return res.json(result);
