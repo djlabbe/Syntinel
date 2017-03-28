@@ -6,7 +6,8 @@ var AppSchema = new mongoose.Schema({
   created: Date,
   status: Boolean,
   owner:  String,
-  tests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Test' }]
+  tests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Test' }],
+  failedTests: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Test' }]
 });
 
 

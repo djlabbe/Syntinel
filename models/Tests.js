@@ -45,6 +45,8 @@ TestSchema.methods.run = function(cb) {
         error: error || stderr
       });
 
+
+
       /* BUG: If a test is mid run, and gets deleted, a result will still
          be created here in the database. The inside function that updates the test
          will generate an error and return safely however. */
@@ -62,6 +64,8 @@ TestSchema.methods.run = function(cb) {
         // And save the test
         self.save(function(err, test) {
           if(err){ return handleErr(err); }
+
+          /* TODO: Make this not return an array */
           return Result.find({ _id: result._id }, cb);
         });
       });

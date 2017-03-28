@@ -49,7 +49,28 @@ router.post('/tests/:test/run', auth, function(req, res, next) {
 
     test.run(function(err, result) {
       if (err) { return next(err);}
-      return res.json(result);
+
+      App.findById(test.app, function (err, app) {
+        if (result[0].status == false) {
+          app.status = false;
+          if (app.failedTests.includes(test._id)) {
+            app.failedTests.push(test._id)
+          }
+        } else {
+          if (app.failedTests.includes(test._id)) {
+            var idx = app.failedTests.indexOf(test._id);
+            app.failedTests.splice(idx, 1);
+            if (app.failedTests.length == 0) {
+              app.status = true;
+            }
+          }
+        }
+
+        app.save(function(err, test) {
+        if(err) { return next(err); }
+           return res.json(result);
+        });
+      });
     });
   });
 });
@@ -59,6 +80,7 @@ router.put('/tests/:test', auth, function(req, res, next) {
   var test = req.test;
   test.isActive = !test.isActive;
   test.save(function(err, test) {
+    if(err) { return next(err); }
     return res.json(test);
   });
 });
@@ -66,11 +88,8 @@ router.put('/tests/:test', auth, function(req, res, next) {
 /* Delete a test */
 router.delete('/tests/:test', function (req, res, next) {
   Test.findById(req.params.test, function(err, test){
-    if(err){
-      return next(err);
-    } else if (!test){
-        return console.log("Test not found.");
-    }
+    if(err){return next(err);} 
+    else if (!test){ return console.log("Test not found."); }
     // Remove from db
     test.remove();
 
@@ -79,10 +98,21 @@ router.delete('/tests/:test', function (req, res, next) {
 
     App.findById(test.app, function(err, app) {
       if (err){ return next(err);}
+      
       var index = app.tests.indexOf(test.id);
       if (index > -1) {
         app.tests.splice(index, 1);
       }
+
+      index = app.failedTests.indexOf(test.id);
+      if (index > -1) {
+        app.failedTests.splice(index, 1);
+      }
+
+      if (app.failedTests.length == 0) {
+        app.status = true;
+      }
+
       app.save(function(err, app) {
         if(err){ return next(err);}
         return res.json(test);
