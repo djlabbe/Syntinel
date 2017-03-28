@@ -1,0 +1,27 @@
+<div>
+    <div class="navbar navbar-default">
+        <div class="container-fluid">
+            <div class="pull-center">
+                <h3>{{$ctrl.app.name}} Tests<button type="button" class="btn btn-primary a-title-btn" ng-click="$ctrl.addTest()">
+                 Add
+                </button></h3>
+            </div>
+        </div>
+    </div>
+
+    <div class="error-message" ng-if="$ctrl.errorMessage!=''">
+    {{$ctrl.errorMessage}}
+    </div>
+
+    <div class="message" ng-if="$ctrl.message!=''">
+    {{$ctrl.message}}
+    </div>
+    
+    <div class="gridStyle" ui-grid="$ctrl.gridOptions" ui-grid-selection></div>
+    
+    <button type="button"
+            class="btn btn-primary"
+            ng-click="$ctrl.runTest($ctrl.gridApi.selection.getSelectedRows())">
+        Run Selected
+    </button>
+</div>
