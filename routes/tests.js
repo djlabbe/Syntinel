@@ -51,14 +51,17 @@ router.post('/tests/:test/run', auth, function(req, res, next) {
       if (err) { return next(err);}
 
       App.findById(test.app, function (err, app) {
+        var idx = app.failedTests.indexOf(test._id);
+
         if (result[0].status == false) {
           app.status = false;
-          if (app.failedTests.includes(test._id)) {
+          if (idx < 0) {
             app.failedTests.push(test._id)
           }
-        } else {
-          if (app.failedTests.includes(test._id)) {
-            var idx = app.failedTests.indexOf(test._id);
+        } 
+
+        else { // test passed
+          if (idx >= 0) {
             app.failedTests.splice(idx, 1);
             if (app.failedTests.length == 0) {
               app.status = true;
