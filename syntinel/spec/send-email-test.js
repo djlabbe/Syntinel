@@ -8,7 +8,7 @@ const transport = nodemailer.createTransport({
 });
 const mailOptions = {
     from: 'syntinelNotification@gmail.com',
-    to: 'thejoshaz@gmail.com',
+    to: '<email-address-here>',
     subject: 'hello world!',
     html: 'hello world!',
 };
