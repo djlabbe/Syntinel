@@ -97,6 +97,24 @@
             }
             $location.path(url);
         };
+
+        vm.deleteApplication = function(){
+            if (vm.app)
+            {
+                applicationSvc.deleteApp(vm.app, $stateParams.id);
+
+                console.log("Gets after service");
+
+                //After deleting test go back to Applications page
+                var url = '/apps';
+                $location.path(url);
+            }
+            else
+            {
+                console.log("error: no app");
+            }
+        };
+
         vm.runTest = function(){
             var tests = vm.gridApi.selection.getSelectedRows();
             tests.forEach(function(test){

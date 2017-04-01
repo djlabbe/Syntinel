@@ -129,3 +129,22 @@ app.get('/clientConnection', function(req, res) {
     });
 });
 
+app.delete('/apps/:id', function(req, res){
+    var id = req.params.id;
+    console.log("DELETE: " + id);
+    //console.log(Test);
+
+    //MongoDB.apps.remove({ _id: id }, function(err) {
+    //Gets here but delete itself not working presently
+    /*
+    Test.db.collections.apps.remove({ _id: id }, function(err) {
+        if (!err) {
+            message.type = 'notification!';
+        }
+        else {
+            message.type = 'error';
+        }
+    });
+    */
+});
+

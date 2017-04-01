@@ -7,7 +7,8 @@
         var svc = {
             getApp: getApp,
             getAllApps: getAllApps,
-            createApp: createApp
+            createApp: createApp,
+            deleteApp: deleteApp
         };
         return svc;
 
@@ -61,6 +62,13 @@
                 deferred.reject(err);
             });
             return deferred.promise;
+        }
+
+
+        function deleteApp(app, id) {
+
+            $http.delete('/apps/' + id);
+
         }
     }
 }());
