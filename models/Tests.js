@@ -55,7 +55,7 @@ TestSchema.methods.run = function(cb) {
       // Some sources recommend allowing these records to be created and just scheduling
       // a regular DB cleaning function to delete them.
 
-      result.save(function(err, result){
+      result.save(function(err, result) {
         if(err){ return handleErr(err); }
 
         // If the result was created then push it to the test
