@@ -54,7 +54,7 @@ router.post('/apps', function(req, res, next) {
 });
 
 /* Save a new test, update the app*/
-router.post('/app/:app/tests', upload.single('file'), function (req, res, next) {
+router.post('/apps/:app/tests', upload.single('file'), function (req, res, next) {
   fs.readFile(req.file.path, 'utf8', function (err,data) {
     if (err) { return next(err); }
     var filecontents = filecontents = data;

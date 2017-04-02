@@ -41,7 +41,7 @@
         function createTest(app, test){
             var deferred = $q.defer();
             Upload.upload({
-                url: '/app/' + app._id + '/tests',
+                url: '/apps/' + app._id + '/tests',
                 method: 'post',
                 data: test
             }).then(function (response) {
