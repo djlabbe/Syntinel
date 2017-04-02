@@ -4,6 +4,7 @@ var App = mongoose.model('App');
 var fs = require('fs'); //filesystem
 var nodemailer = require('nodemailer');
 var exec = require('child_process').exec;
+var TestRunner = require('../src/test-runner/TestRunner');
 
 // TODO: Figure out where to store this and how to encrypt the password
 var transport = nodemailer.createTransport({
@@ -35,7 +36,6 @@ TestSchema.methods.run = function(cb) {
 
     //I did not need this call. Is this necessary?
     // fs.chmod(this.file.path, 0777);
-    var TestRunner = require('../src/test-runner/TestRunner');
     var runner = new TestRunner(this.file.path, this.scriptType, this, cb);
     runner.run();
 };
