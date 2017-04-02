@@ -58,6 +58,22 @@
                       class="help-block">Username is required</span>
             </div>
         </div>
+        <div class="form-group"
+             ng-class="{ 'has-error': form.email.$dirty && form.email.$error.required }">
+            <label for="email"
+                   class="control-label col-md-2">Email</label>
+            <div class="col-md-10">
+                <input type="text"
+                       name="email"
+                       id="email"
+                       class="form-control"
+                       placeholder="User Name"
+                       ng-model="vm.user.email"
+                       required />
+                <span ng-show="form.email.$dirty && form.email.$error.required"
+                      class="help-block">Email is required</span>
+            </div>
+        </div>
         <div class="form-group" ng-class="{ 'has-error': form.password.$dirty && form.password.$error.required }">
             <label for="password" class="control-label col-md-2">Password</label>
             <div class="col-md-10">
