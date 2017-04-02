@@ -1,19 +1,30 @@
 var mongoose = require('mongoose');
 var Result = mongoose.model('Result');
+var App = mongoose.model('App');
 var fs = require('fs'); //filesystem
+var nodemailer = require('nodemailer');
 var exec = require('child_process').exec;
+
+// TODO: Figure out where to store this and how to encrypt the password
+var transport = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+      user: 'SyntinelNotification@gmail.com',
+      pass: '@ll$81122'
+  }
+});
 
 var TestSchema = new mongoose.Schema({
   name: String,
+  app: { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
   description: String,
   created: Date,
   file: Object,
   status: {type: Number, enum: [-1, 0, 1], default: -1},
   scriptType: {type: String, enum: ['shell', 'selenium', 'jmeter']},
   filecontents: String,
-  parentApp: { type: mongoose.Schema.Types.ObjectId, ref: 'App' },
   frequency: { type: Number, enum: [5, 30, 300, 600, 1800, 3600, 86400]},
-  results: [{type: mongoose.Schema.Types.ObjectId, ref: 'Result'}]
+  isActive: Boolean
 });
 
 TestSchema.pre('remove', function(next){
@@ -28,6 +39,7 @@ TestSchema.methods.run = function(cb) {
     var runner = new TestRunner(this.file.path, this.scriptType, this, cb);
     runner.run();
 };
+
 
 var handleErr = function(err) {
   console.log("Got an error");

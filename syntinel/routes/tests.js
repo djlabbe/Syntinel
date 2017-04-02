@@ -15,41 +15,36 @@ var Test = mongoose.model('Test');
 var Result = mongoose.model('Result');
 var App = mongoose.model('App');
 
+/* Preload a TEST object by id */
+router.param('test', function(req, res, next, id) {
+  var query = Test.findById(id);
+  query.exec(function (err, test){
+    if (err) { return next(err); }
+    if (!test) { return next(new Error('can\'t find test')); }
+    req.test = test;
+    return next();
+  });
+});
+
 /* Get all tests */
-router.get('/test/', function(req, res, next) {
+router.get('/tests/', function(req, res, next) {
   Test.find(function(err, tests){
     if(err){ return next(err); }
     return res.json(tests);
   });
 });
 
-
-/* Get all results belonging to a test */
-router.get('/test/:test/results', function(req, res, next) {
-  Result.find( {test_id: req.params.test }, function(err, results){
-    if(err){ return next(err); }
-    return res.json(results);
-  });
-});
-
-
-/* Retrieve results along with tests (populate tests with results) */
-router.get('/test/:test', function(req, res, next) {
-  req.test.populate('results', function(err, test) {
-    if (err) { return next(err); }
-    fs.readFile(req.test.file.path, 'utf8', function (err,data) {
-        if (err) { return next(err); }
-        test.filecontents = data;
-        return res.json(test);
-    });
+/* Get a single test */
+router.get('/tests/:test', function(req, res, next) {
+  Test.findById(req.params.test, function(err, test) {
+     if (err) { return next(err); }
+     return res.json(test);
   });
 });
 
 router.post('/test/:test/run', auth, function(req, res, next) {
-
   console.log("TEST HAS BEEN TOLLED TO RUN");
   console.log(req.params.test);
-
   Test.findById(req.params.test, function (err, test) {
     if (err) { return next(err); }
 
@@ -60,57 +55,51 @@ router.post('/test/:test/run', auth, function(req, res, next) {
   });
 });
 
-router.delete('/test/:test/delete', function (req, res, next) {
-    Test.findById(req.params.test, function(err, test){
-      if(err){
-        return next(err);
-      } else if (!test){
-          return console.log("Test not found.");
+/* Toggle isActive */
+router.put('/tests/:test', auth, function(req, res, next) {
+  var test = req.test;
+  test.isActive = !test.isActive;
+  test.save(function(err, test) {
+    return res.json(test);
+  });
+});
+
+/* Delete a test */
+router.delete('/tests/:test', function (req, res, next) {
+  Test.findById(req.params.test, function(err, test){
+    if(err){
+      return next(err);
+    } else if (!test){
+        return console.log("Test not found.");
+    }
+    // Remove from db
+    test.remove();
+
+    // Remove File from System
+    fs.unlinkSync(test.file.path);
+
+    App.findById(test.app, function(err, app) {
+      if (err){ return next(err);}
+      var index = app.tests.indexOf(test.id);
+      if (index > -1) {
+        app.tests.splice(index, 1);
       }
-      // Remove from db
-      test.remove();
-
-      // Remove File from System
-      fs.unlinkSync(test.file.path);
-
-      App.findById(test.parentApp, function(err, app) {
-        if (err){ return next(err);}
-        var index = app.tests.indexOf(test.id);
-        if (index > -1) {
-          app.tests.splice(index, 1);
-        }
-        app.save(function(err, app) {
-          if(err){ return next(err);}
-          return res.json(test);
-        });
+      app.save(function(err, app) {
+        if(err){ return next(err);}
+        return res.json(test);
       });
     });
-});
-
-/* Preload a TEST object by id */
-router.param('test', function(req, res, next, id) {
-  var query = Test.findById(id);
-
-  query.exec(function (err, test){
-    if (err) { return next(err); }
-    if (!test) { return next(new Error('can\'t find test')); }
-
-    req.test = test;
-    return next();
   });
 });
 
-/* Preload a RESULT object by id */
-router.param('result', function(req, res, next, id) {
-  var query = Result.findById(id);
-
-  query.exec(function (err, test){
-    if (err) { return next(err); }
-    if (!result) { return next(new Error('can\'t find result')); }
-
-    req.result = result;
-    return next();
+/* Get all results belonging to a test */
+router.get('/tests/:test/results', function(req, res, next) {
+  Result.find( {test_id: req.params.test }, function(err, results){
+    if(err){ return next(err); }
+    return res.json(results);
   });
 });
+
+
 
 module.exports = router;

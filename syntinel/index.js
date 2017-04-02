@@ -1,7 +1,12 @@
-require('./models/Results');
-require('./models/Tests');
+/* The main app file. In here we establish a connection to the database,
+ set up our http router, and start the server listening for incoming connections.
+ Additionally, we handle scheduled executions of test scripts as well as sending
+ a notification to connected clients when run has completed */
+
 require('./models/Users');
+require('./models/Results');
 require('./models/Apps');
+require('./models/Tests');
 require('./config/passport');
 
 var request = require('request');
@@ -56,7 +61,8 @@ app.listen(port, function(){
 /************************ Timed Script Execution ***************************/
 /***************************************************************************/
 
-var freqs = [5, 30, 300, 600, 1800, 3600, 86400];
+
+var freqs = [5, 30, 300, 600, 1800, 3600, 86400]; 
 var openConnections = [];
 
 /* For each interval set up a loop --
@@ -70,13 +76,14 @@ freqs.forEach(function(freq) {
     var cursor = Test.find({ frequency: freq }).cursor();
 
     cursor.on('data', function(doc) {
-      doc.run(function(err, result) {
-
-        if (err) { return next(err); }
-        openConnections.forEach(function(resp) {
-          resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
+      if(doc.isActive) {
+        doc.run(function(err, result) {
+          if (err) { return next(err); }
+          openConnections.forEach(function(resp) {
+            resp.write('data:' + JSON.stringify(result) +  '\n\n'); // Note the extra newline
+          });
         });
-      });
+      }
     });
   }, 1000 * freq); 
 });
@@ -85,7 +92,10 @@ freqs.forEach(function(freq) {
 /***************************************************************************/
 /******************* SERVER SENT EVENTS ************************************/
 /***************************************************************************/
-/* Adapted from https://dzone.com/articles/html5-server-sent-events */
+/**** Adapted from https://dzone.com/articles/html5-server-sent-events *****/
+/***************************************************************************/
+/* Uses an http get request with no timeout to establish an "event-stream"
+   for sending events to clients. */
 
 app.get('/clientConnection', function(req, res) {
 
@@ -93,7 +103,6 @@ app.get('/clientConnection', function(req, res) {
     req.socket.setTimeout(Number.MAX_VALUE);
 
     // send headers for event-stream connection
-    // see spec for more information
     res.writeHead(200, {
         'Content-Type': 'text/event-stream',
         'Cache-Control': 'no-cache',
@@ -102,7 +111,7 @@ app.get('/clientConnection', function(req, res) {
 
     res.write('\n');
 
-    // push this res object to our global variable
+    // push this res object to our array of clients
     openConnections.push(res);
 
     // When the request is closed, e.g. the browser window
@@ -117,7 +126,6 @@ app.get('/clientConnection', function(req, res) {
             }
         }
         openConnections.splice(j,1);
-        console.log(openConnections.length);
     });
 });
 

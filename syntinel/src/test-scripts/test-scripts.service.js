@@ -15,7 +15,9 @@
             getTest: getTest,
             createTest: createTest,
             runTest: runTest,
-            deleteTest: deleteTest
+            getResults: getResults,
+            deleteTest: deleteTest,
+            toggleActive: toggleActive
         };
         return svc;
 
@@ -27,17 +29,17 @@
         }
 
         function getAllTests(){
-            return $http
-                .get('/test/');
+            return $http.get('/tests/');
         }
         function getTest(id){
-            return $http
-                .get('/test/' + id);
+            return $http.get('/tests/' + id);
         }
+        function getResults(id){
+            return $http.get('/tests/' + id + '/results');
+        }
+
         function createTest(app, test){
-
             console.log("Test has been created.");
-
             var deferred = $q.defer();
             Upload.upload({
                 url: '/app/' + app._id + '/tests',
@@ -51,18 +53,20 @@
             return deferred.promise;
         }
         function runTest(test){
-
-            console.log("Run test has been called.");
-
-            return $http.post('/test/' + test._id + '/run', null,
+            return $http.post('/tests/' + test._id + '/run', null,
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
-           
+        }
+
+        function toggleActive(test) {
+             return $http.put('/tests/' + test._id, null,
+                {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
+            });
         }
         
         function deleteTest(test){
             lastDeleted = test;
-            return $http.delete('test/' + test._id + '/delete', null,
+            return $http.delete('tests/' + test._id, null,
                 {headers: {Authorization: 'Bearer ' + authenticationSvc.getToken()}
             });
         }

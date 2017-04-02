@@ -7,7 +7,7 @@
         });
 
     /* @ngInject */
-    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc, $scope) {
+    function ViewScriptsCtrl(applicationSvc, $stateParams, $location, testScriptSvc, resultSvc, $scope) {
         var vm = this;
         vm.test = {};
         vm.message = "";
@@ -16,24 +16,32 @@
         testScriptSvc.getTest($stateParams.testId).then(function(resp){
             vm.test = resp.data;
             vm.test.name = resp.data.name;
-            vm.gridOptions.data = resp.data.results;
+            testScriptSvc.getResults($stateParams.testId).then(function(resp){
+            vm.gridOptions.data = resp.data;
+            });
         });
 
         vm.runTest = function(){
             testScriptSvc.runTest(vm.test).then(function(resp){
-               vm.test.results.push(resp.data[0]);
+            vm.gridOptions.data.push(resp.data[0]);
                vm.message = "Test run complete!"
             });
         };
         vm.deleteTest = function(){
-            console.log("About to call testScriptSvc.deleteTest...");
             testScriptSvc.deleteTest(vm.test).then(function(resp){
-                $location.path('/tests/' + resp.data.parentApp);
+                $location.path('/apps/' + resp.data.app);
             });
         };
-        $scope.results = function(result){
-            var url = '/tests/results/' + result._id;
-            $location.path(url);
+
+        vm.toggleActive = function() {
+            testScriptSvc.toggleActive(vm.test).then(function(resp){
+                vm.test = resp.data;
+            });
+        };
+        vm.clearResults = function(){
+            resultSvc.clearResults(vm.test._id).then(function(resp){
+                vm.gridOptions.data = [];
+            });
         };
 
         vm.gridOptions = {};
@@ -77,7 +85,10 @@
             vm.gridApi = gridApi;
         };
 
-
+        $scope.results = function(row){
+            var url = "/tests/results/" + row._id;
+            $location.path(url);
+        };
 
 /***************************************************************************/
 /******************* SERVER SENT EVENTS ************************************/
@@ -88,7 +99,7 @@
             var newResult = JSON.parse(msg.data)[0];
             if (newResult.test_id == vm.test._id)
             {
-                vm.test.results.push(newResult);   
+                vm.gridOptions.data.push(newResult);   
             }
         }
 

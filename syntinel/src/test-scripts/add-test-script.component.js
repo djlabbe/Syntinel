@@ -36,7 +36,7 @@
 
             if(vm.app && vm.test && vm.test.file && vm.test.description){
                 testScriptSvc.createTest(vm.app, vm.test).then(function(resp){
-                    var url = '/tests/' + vm.app._id;
+                    var url = '/apps/' + vm.app._id;
                     $location.path(url);
                     testScriptSvc.runTest(resp).then(function(resp) {
                         // Make the /tests/vm.app._id page reload its data?
