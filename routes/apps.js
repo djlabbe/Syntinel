@@ -46,7 +46,6 @@ router.get('/apps/:app', function(req, res, next) {
 /* Save a new app */
 router.post('/apps', function(req, res, next) {
   var app = new App(req.body);
-  app.failedTests = [];
   app.save(function(err, app){
     if(err){ return next(err); }
     return res.json(app);

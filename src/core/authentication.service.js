@@ -17,11 +17,11 @@
         return svc;
 
         function saveToken(token){
-            $window.sessionStorage['syntinel-token'] = token;
+            $window.localStorage['syntinel-token'] = token;
         }
 
         function getToken(){
-            return $window.sessionStorage['syntinel-token'];
+            return $window.localStorage['syntinel-token'];
         }
 
         function isLoggedIn(){
@@ -60,7 +60,7 @@
         }
 
         function logOut(){
-            $window.sessionStorage.removeItem('syntinel-token');
+            $window.localStorage.removeItem('syntinel-token');
         }
     }
 }());

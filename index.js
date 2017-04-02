@@ -3,10 +3,10 @@
  Additionally, we handle scheduled executions of test scripts as well as sending
  a notification to connected clients when run has completed */
 
-require('./models/Results');
-require('./models/Tests');
 require('./models/Users');
+require('./models/Results');
 require('./models/Apps');
+require('./models/Tests');
 require('./config/passport');
 
 var request = require('request');
