@@ -129,10 +129,19 @@ app.get('/clientConnection', function(req, res) {
     });
 });
 
-app.delete('/apps/:id', function(req, res){
-    var id = req.params.id;
-    console.log("DELETE: " + id);
-    //console.log(Test);
+// app.delete('/apps/:id', function(req, res){
+//   var id = req.params.id;
+//   console.log("DELETE: " + id);
+//   //console.log(Test);
+
+//    Apps.findById(req.params.app, function(err, app){
+//     if(err){return next(err);} 
+//     else if (!test){ return console.log("App not found."); }
+//     // Remove from db
+//     app.remove();
+
+//    });
+// });
 
     //MongoDB.apps.remove({ _id: id }, function(err) {
     //Gets here but delete itself not working presently
@@ -146,5 +155,5 @@ app.delete('/apps/:id', function(req, res){
         }
     });
     */
-});
+
 
