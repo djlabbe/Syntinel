@@ -5,8 +5,8 @@ var jwt = require('jsonwebtoken');
 var UserSchema = new mongoose.Schema({
   firstName: String,
   lastName: String,
-  admin: Boolean,
   username: {type: String, lowercase: true, unique: true},
+  email: String,
   hash: String,
   salt: String
 });
@@ -36,11 +36,5 @@ UserSchema.methods.generateJWT = function() {
   }, 'SECRET'); // Change the 'SECRET' secret key to an environment variable 
                 // for referencing the secret to keep it out of the codebase.
 };
-
-UserSchema.methods.generateRootUser = function() {
-  var user = new User();
-  user.userName = "root";
-  
-}
 
 mongoose.model('User', UserSchema);

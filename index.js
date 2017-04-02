@@ -3,10 +3,10 @@
  Additionally, we handle scheduled executions of test scripts as well as sending
  a notification to connected clients when run has completed */
 
-require('./models/Results');
-require('./models/Tests');
 require('./models/Users');
+require('./models/Results');
 require('./models/Apps');
+require('./models/Tests');
 require('./config/passport');
 
 var request = require('request');
@@ -128,4 +128,32 @@ app.get('/clientConnection', function(req, res) {
         openConnections.splice(j,1);
     });
 });
+
+// app.delete('/apps/:id', function(req, res){
+//   var id = req.params.id;
+//   console.log("DELETE: " + id);
+//   //console.log(Test);
+
+//    Apps.findById(req.params.app, function(err, app){
+//     if(err){return next(err);} 
+//     else if (!test){ return console.log("App not found."); }
+//     // Remove from db
+//     app.remove();
+
+//    });
+// });
+
+    //MongoDB.apps.remove({ _id: id }, function(err) {
+    //Gets here but delete itself not working presently
+    /*
+    Test.db.collections.apps.remove({ _id: id }, function(err) {
+        if (!err) {
+            message.type = 'notification!';
+        }
+        else {
+            message.type = 'error';
+        }
+    });
+    */
+
 
