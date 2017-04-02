@@ -85,4 +85,16 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
   });
 });
 
+router.delete('/apps/:app', function(req, res, next) {
+  App.findById(req.params.app, function(err, app){
+    if(err){return next(err);} 
+    else if (!app){ return console.log("App not found."); }
+    app.remove();
+    // Remove all tests & Results belonging to this app
+    return res.json(app);
+  });
+});
+
+
+
 module.exports = router;
