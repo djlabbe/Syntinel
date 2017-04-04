@@ -9,6 +9,10 @@
 
     /* @ngInject */
     function ApplicationController(applicationSvc, $stateParams, $location, testScriptSvc, $scope){
+        //Viewing Tests and a single application use same controller, hide delete application button when viewing tests.  
+        if ($location.url() === '/apps/') { $scope.isApplications = false; }
+        else { $scope.isApplications = true; }
+        
         var vm = this;
         vm.message = "";
         vm.errorMessage = "";
