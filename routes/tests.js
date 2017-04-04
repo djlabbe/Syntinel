@@ -28,9 +28,9 @@ router.param('test', function(req, res, next, id) {
 
 /* Get all tests */
 router.get('/tests/', function(req, res, next) {
-  Test.find(function(err, tests){
-    if(err){ return next(err); }
-    return res.json(tests);
+  Test.find().populate('app')
+  .exec(function(err, results) {
+    return res.json(results);
   });
 });
 

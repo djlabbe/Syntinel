@@ -17,9 +17,14 @@
             runTest: runTest,
             getResults: getResults,
             deleteTest: deleteTest,
-            toggleActive: toggleActive
+            toggleActive: toggleActive,
+            getParentApp: getParentApp
         };
         return svc;
+
+        function getParentApp(test) {
+            return $http.get('/apps/' + test.app);
+        }
 
         function getLastDeletedTest(){
             return lastDeleted;

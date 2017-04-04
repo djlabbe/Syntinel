@@ -9,7 +9,6 @@
 
     /* @ngInject */
     function TestsController($stateParams, $location, testScriptSvc, $scope){
-        console.log("Tests controller");
         var vm = this;
         vm.message = "";
         vm.errorMessage = "";
@@ -37,7 +36,7 @@
             {
                 field: 'app',
                 displayName: 'App',
-                cellTemplate: '<div class="clickable" ng-click="grid.appScope.viewApp(row.entity)">{{row.entity.app}}</div>',
+                cellTemplate: '<div class="clickable" ng-click="grid.appScope.viewApp(row.entity)">{{row.entity.app.name}}</div>',
                 cellClass: 'blue-cell',
                 width: "20%",
                 resizable: true
@@ -104,7 +103,7 @@
         }
 
         $scope.viewApp = function(row){
-            var url = '/apps/' + row.app;
+            var url = '/apps/' + row.app._id;
             $location.path(url);
         }
     }
