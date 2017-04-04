@@ -1,14 +1,15 @@
 (function(){
     "use strict";
     angular
-        .module('applications')
-        .component('app',{
-            templateUrl:'src/applications/application.tmpl.html',
-            controller: ApplicationController
+        .module('testScripts')
+        .component('tests',{
+            templateUrl: 'src/test-scripts/tests.tmpl.html',
+            controller: TestsController
         });
 
     /* @ngInject */
-    function ApplicationController(applicationSvc, $stateParams, $location, testScriptSvc, $scope){
+    function TestsController($stateParams, $location, testScriptSvc, $scope){
+        console.log("Tests controller");
         var vm = this;
         vm.message = "";
         vm.errorMessage = "";
@@ -30,26 +31,34 @@
                         return 'grey-cell';
                     }
                 },
-                width: "10%",
+                width: "8%",
+                resizable: true
+            }, 
+            {
+                field: 'app',
+                displayName: 'App',
+                cellTemplate: '<div class="clickable" ng-click="grid.appScope.viewApp(row.entity)">{{row.entity.app}}</div>',
+                cellClass: 'blue-cell',
+                width: "20%",
                 resizable: true
             }, {
                 field: 'name',
                 displayName: 'Name',
                 cellTemplate: '<div class="clickable" ng-click="grid.appScope.viewTest(row.entity)">{{row.entity.name}}</div>',
                 cellClass: 'blue-cell',
-                width: "27%",
+                width: "20%",
                 resizable: true
             }, {
                 field:'description',
                 displayName: 'Description',
-                width: "31%",
+                width: "24%",
                 resizable: true
-            }, {
+            }, {    
                 field:'created',
                 enableFiltering: false,
                 displayName: 'Created On',
                 cellTemplate: "<div>{{row.entity.created | date:'medium'}}</div>",
-                width: "20%",
+                width: "15%",
                 resizable: true
             }, {
                 field: 'frequency',
@@ -63,57 +72,22 @@
                         return 'inactive-cell';
                     }
                 },
-                width: "12%"
+                width: "13%"
             }
         ];
+        
         vm.gridOptions.onRegisterApi = function(gridApi){
             vm.gridApi = gridApi;
         };
-        if($stateParams.id){
-        
-            if (testScriptSvc.getLastDeletedTest() != null) {
-                vm.message = "Successfully deleted test: " + testScriptSvc.getLastDeletedTest().name;
-                testScriptSvc.resetLastDeleted();
-            }
-            
-            // Get tests for specific app
-            applicationSvc.getApp($stateParams.id).then(function(app){
-                vm.app = app.data;
-                vm.gridOptions.data = app.data.tests;
-            });
-        } else {
-            // Get all Tests
-            testScriptSvc.getAllTests().then(function(tests){
-                vm.gridOptions.data = tests.data;
-            });
-        }
+       
+
+        testScriptSvc.getAllTests().then(function(tests){
+            vm.gridOptions.data = tests.data;
+        });
+
         vm.addTest = function(){
-            if (vm.app)
-            {
-                var url = '/addTest/' + vm.app._id;
-            }
-            else 
-            {
-                var url = '/addTest/'  
-            }
+            var url = '/addTest/'  
             $location.path(url);
-        };
-
-        vm.deleteApplication = function(){
-            if (vm.app)
-            {
-                applicationSvc.deleteApp(vm.app, $stateParams.id);
-
-                console.log("Gets after service");
-
-                //After deleting test go back to Applications page
-                var url = '/apps';
-                $location.path(url);
-            }
-            else
-            {
-                console.log("error: no app");
-            }
         };
 
         vm.runTest = function(){
@@ -123,8 +97,14 @@
             });
             vm.message = "Test run complete!";
         };
+
         $scope.viewTest = function(row){
             var url = '/tests/' + row._id;
+            $location.path(url);
+        }
+
+        $scope.viewApp = function(row){
+            var url = '/apps/' + row.app;
             $location.path(url);
         }
     }

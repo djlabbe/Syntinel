@@ -6,11 +6,17 @@
 
     function configScripts($stateProvider){
         $stateProvider
-            .state("addTest",{
+            .state('tests', {
+                url: '/tests',
+                template: '<tests></tests>',
+                component: 'tests'
+            })
+            .state('addTest',{
                 url: "/addTest/:appId",
                 template: '<add-test-comp></add-test-comp>',
                 component: 'addTestComp'
-            }) .state('test',{
+            }) 
+            .state('test',{
                 url: '/tests/:testId',
                 template: '<view-test-comp></view-test-comp>',
                 component: 'viewTestComp'

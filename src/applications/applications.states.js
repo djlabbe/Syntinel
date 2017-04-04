@@ -6,8 +6,8 @@
 
     function configApps($stateProvider){
         $stateProvider
-            .state("apps",{
-                url: "/apps",
+            .state('apps',{
+                url: '/apps',
                 template: '<apps></apps>',
                 component: 'apps'
             })
@@ -16,8 +16,8 @@
                 template: '<app></app>',
                 component: 'app'
             })
-             .state("addApp",{
-                url:"/addApp",
+            .state('addApp',{
+                url:'/addApp',
                 template: '<add-app></add-app>',
                 component: 'addApp'
             });

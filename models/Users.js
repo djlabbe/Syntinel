@@ -7,6 +7,7 @@ var UserSchema = new mongoose.Schema({
   lastName: String,
   username: {type: String, lowercase: true, unique: true},
   email: String,
+  admin: Boolean,
   hash: String,
   salt: String
 });
