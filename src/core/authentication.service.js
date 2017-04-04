@@ -60,7 +60,7 @@
         }
 
         function logOut(){
-            $window.sessionStorage['syntinel-token'] = token;
+            $window.localStorage.removeItem('syntinel-token');
         }
     }
 }());
