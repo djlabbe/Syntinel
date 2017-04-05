@@ -19,7 +19,8 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var bodyParser = require('body-parser');
-var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
+// var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
+var mongoURI = 'mongodb://admin:admin@ec2-54-236-37-99.compute-1.amazonaws.com:27017/syntinel'
 var MongoDB = mongoose.connect(mongoURI).connection;
 var Test = mongoose.model('Test');
 
