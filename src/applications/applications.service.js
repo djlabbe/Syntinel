@@ -64,7 +64,7 @@
             return deferred.promise;
         }
 
-
+        // Delete a app in the db
         function deleteApp(app, id) {
 
             $http.delete('/apps/' + id);

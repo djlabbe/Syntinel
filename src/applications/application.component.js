@@ -103,13 +103,19 @@
         };
 
         vm.deleteApplication = function(){
+
             if (vm.app)
             {
+                //Delete tests
+                (vm.app.tests).forEach(function (test) {
+                    testScriptSvc.deleteTest(test);
+                 });
+
+                //Delete the application
                 applicationSvc.deleteApp(vm.app, $stateParams.id);
 
-                console.log("Gets after service");
 
-                //After deleting test go back to Applications page
+                //After deleting application go back to Applications page
                 var url = '/apps';
                 $location.path(url);
             }
