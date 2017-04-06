@@ -5,9 +5,11 @@
 "use strict";
 var webdriver = require('selenium-webdriver');
 
+console.log("START");
+
 var browser = new webdriver.Builder()
     .forBrowser('chrome')
-    .usingServer('http://ec2-34-205-75-185.compute-1.amazonaws.com:8080')
+    .usingServer(':8080/')
     .build();
 
  
