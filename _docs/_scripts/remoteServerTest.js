@@ -9,7 +9,7 @@ console.log("START");
 
 var browser = new webdriver.Builder()
     .forBrowser('chrome')
-    .usingServer(':8080/')
+    .usingServer('http://127.0.0.1:8080/wd/hub')
     .build();
 
  

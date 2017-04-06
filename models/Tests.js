@@ -37,7 +37,7 @@ TestSchema.methods.run = function(cb) {
 
     var execCommand = '';
     if (this.scriptType == 'shell') { execCommand = this.file.path;}
-    if (this.scriptType == 'selenium') { execCommand = 'DISPLAY=:99 node ' + this.file.path;}
+    if (this.scriptType == 'selenium') { execCommand = 'SELENIUM_REMOTE_URL=http://127.0.0.1:8080/wd/hub node ' + this.file.path;}
 
     var self = this;
 
