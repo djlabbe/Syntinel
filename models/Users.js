@@ -38,4 +38,10 @@ UserSchema.methods.generateJWT = function() {
                 // for referencing the secret to keep it out of the codebase.
 };
 
+UserSchema.methods.generateRootUser = function() {
+   var user = new User();
+   user.userName = "root";
+   
+ }
+
 mongoose.model('User', UserSchema);

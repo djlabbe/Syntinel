@@ -49,7 +49,35 @@ router.post('/tests/:test/run', auth, function(req, res, next) {
 
     test.run(function(err, result) {
       if (err) { return next(err);}
-      return res.json(result);
+
+      /* Update application status based on most recent test run */
+      App.findById(test.app, function (err, app) {
+        /* Get index of current test in the failedTests array */
+        /* May or may not be present */
+        var idx = app.failedTests.indexOf(test._id); 
+
+        if (result[0].status == false) { // If our test execution was fail
+          app.status = false;  // Application status is now fail
+          if (idx < 0) { // if the test was not already known to be fail
+            app.failedTests.push(test._id) // add it
+          }
+        } 
+
+        else { 
+          if (idx >= 0) { // test passed and WAS PREVIOUSLY FAILING
+            app.failedTests.splice(idx, 1); // remove it from list of failing tests
+            if (app.failedTests.length == 0) { // if the array is NOW empty
+              app.status = true; // the app is green again
+            }
+          }
+        }
+
+        // save it
+        app.save(function(err, test) {
+        if(err) { return next(err); }
+           return res.json(result);
+        });
+      });
     });
   });
 });
@@ -59,6 +87,7 @@ router.put('/tests/:test', auth, function(req, res, next) {
   var test = req.test;
   test.isActive = !test.isActive;
   test.save(function(err, test) {
+    if(err) { return next(err); }
     return res.json(test);
   });
 });
@@ -66,11 +95,8 @@ router.put('/tests/:test', auth, function(req, res, next) {
 /* Delete a test */
 router.delete('/tests/:test', function (req, res, next) {
   Test.findById(req.params.test, function(err, test){
-    if(err){
-      return next(err);
-    } else if (!test){
-        return console.log("Test not found.");
-    }
+    if(err){return next(err);} 
+    else if (!test){ return console.log("Test not found."); }
     // Remove from db
     test.remove();
 
@@ -79,10 +105,21 @@ router.delete('/tests/:test', function (req, res, next) {
 
     App.findById(test.app, function(err, app) {
       if (err){ return next(err);}
+      
       var index = app.tests.indexOf(test.id);
       if (index > -1) {
         app.tests.splice(index, 1);
       }
+
+      index = app.failedTests.indexOf(test.id);
+      if (index > -1) {
+        app.failedTests.splice(index, 1);
+      }
+
+      if (app.failedTests.length == 0) {
+        app.status = true;
+      }
+
       app.save(function(err, app) {
         if(err){ return next(err);}
         return res.json(test);

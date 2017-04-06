@@ -37,7 +37,7 @@ TestSchema.methods.run = function(cb) {
 
     var execCommand = '';
     if (this.scriptType == 'shell') { execCommand = this.file.path;}
-    if (this.scriptType == 'selenium') { execCommand = 'node ' + this.file.path;}
+    if (this.scriptType == 'selenium') { execCommand = 'DISPLAY=:99 node ' + this.file.path;}
 
     var self = this;
 
@@ -56,13 +56,17 @@ TestSchema.methods.run = function(cb) {
         error: error || stderr
       });
 
-      // If error, send results by email to the application holder
+    // If error, send results by email to the application holder
       if(!didPass) {
-        App.findById(self.app, sendEmail);
-        function sendEmail(err, app) {
-          if(err){ console.log('Could not application for appId: ' + self.app); }
+
+        App.findById(self.app, function(err, app) {
+          if(err){ console.log('Could not find application for appId: ' + self.app); }
+          console.log("APP: " + app);
           app.getUser(function (err, user) {
               if (err) { console.log('Could not find user for app: ', app._id); }
+
+              console.log("USER: " + user);
+
               // Create Email message
               var mailOpts = {
                   from: 'SyntinelNotification@gmail.com',
@@ -76,7 +80,7 @@ TestSchema.methods.run = function(cb) {
                 console.log('Email sent to ' + user.email);
               });
           });
-        }
+        });
       }
 
       /* BUG: If a test is mid run, and gets deleted, a result will still
