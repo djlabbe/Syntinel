@@ -5,9 +5,19 @@
                 <h3>{{$ctrl.app.name}} Tests<button type="button" class="btn btn-primary a-title-btn" ng-click="$ctrl.addTest()">
                  Add Test
                  </button>
-                 <button type = "button" class="btn btn-danger a-title-btn" ng-click="$ctrl.deleteApplication()" ng-show=isApplications>Delete Application</button>
+                 <button type = "button" class="btn btn-danger a-title-btn" ng-show=isApplications data-toggle="modal" data-target="#AppsSafetyModal">Delete Application</button>
                 </h3>
-
+                <div id="AppsSafetyModal" class="modal fade" role="dialog">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-body">Are you sure you want to delete?</div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-default" ng-click="$ctrl.deleteApplication()">Yes</button>
+                                <button type="button" class="btn btn-default" data-dismiss="modal">No</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

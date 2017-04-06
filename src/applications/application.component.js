@@ -114,6 +114,7 @@
                 //Delete the application
                 applicationSvc.deleteApp(vm.app, $stateParams.id);
 
+                $(".modal-backdrop").hide();    //Hide bootstrap modal
 
                 //After deleting application go back to Applications page
                 var url = '/apps';

@@ -29,6 +29,7 @@
         };
         vm.deleteTest = function(){
             testScriptSvc.deleteTest(vm.test).then(function(resp){
+                $(".modal-backdrop").hide();    //Hide bootstrap modal
                 $location.path('/apps/' + resp.data.app);
             });
         };
