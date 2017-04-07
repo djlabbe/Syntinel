@@ -28,6 +28,7 @@ var TestSchema = new mongoose.Schema({
 });
 
 TestSchema.pre('remove', function(next){
+  fs.unlinkSync(this.file.path);
   this.model('Result').remove({test_id: this._id}, next);
 });
 

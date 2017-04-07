@@ -66,9 +66,7 @@
 
 
         function deleteApp(app, id) {
-
             $http.delete('/apps/' + id);
-
         }
     }
 }());

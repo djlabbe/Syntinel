@@ -96,7 +96,6 @@ router.delete('/apps/:app', function(req, res, next) {
     var cursor = Test.find({app: app._id }).cursor();
     cursor.on('data', function(doc) {
 
-
       doc.remove();
     });
 

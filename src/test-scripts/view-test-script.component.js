@@ -28,8 +28,10 @@
                vm.message = "Test run complete!"
             });
         };
+        
         vm.deleteTest = function(){
             testScriptSvc.deleteTest(vm.test).then(function(resp){
+                $(".modal-backdrop").hide();
                 $location.path('/apps/' + resp.data.app);
             });
         };

@@ -103,10 +103,7 @@
             if (vm.app)
             {
                 applicationSvc.deleteApp(vm.app, $stateParams.id);
-
-                console.log("Gets after service");
-
-                //After deleting test go back to Applications page
+                $(".modal-backdrop").hide();
                 var url = '/apps';
                 $location.path(url);
             }

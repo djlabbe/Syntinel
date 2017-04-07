@@ -100,9 +100,6 @@ router.delete('/tests/:test', function (req, res, next) {
     // Remove from db
     test.remove();
 
-    // Remove File from System
-    fs.unlinkSync(test.file.path);
-
     App.findById(test.app, function(err, app) {
       if (err){ return next(err);}
       

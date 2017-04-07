@@ -19,8 +19,8 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var bodyParser = require('body-parser');
-// var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
-var mongoURI = 'mongodb://admin:admin@ec2-34-200-223-57.compute-1.amazonaws.com:27017/syntinel'
+var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
+//var mongoURI = 'mongodb://admin:admin@ec2-34-200-223-57.compute-1.amazonaws.com:27017/syntinel'
 var MongoDB = mongoose.connect(mongoURI).connection;
 var Test = mongoose.model('Test');
 
@@ -130,31 +130,5 @@ app.get('/clientConnection', function(req, res) {
     });
 });
 
-// app.delete('/apps/:id', function(req, res){
-//   var id = req.params.id;
-//   console.log("DELETE: " + id);
-//   //console.log(Test);
-
-//    Apps.findById(req.params.app, function(err, app){
-//     if(err){return next(err);} 
-//     else if (!test){ return console.log("App not found."); }
-//     // Remove from db
-//     app.remove();
-
-//    });
-// });
-
-    //MongoDB.apps.remove({ _id: id }, function(err) {
-    //Gets here but delete itself not working presently
-    /*
-    Test.db.collections.apps.remove({ _id: id }, function(err) {
-        if (!err) {
-            message.type = 'notification!';
-        }
-        else {
-            message.type = 'error';
-        }
-    });
-    */
 
 
