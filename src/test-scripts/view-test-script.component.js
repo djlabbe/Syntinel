@@ -49,7 +49,7 @@
             {
                 field:'status',
                 displayName: 'Status',
-                cellTemplate: "<div class='clickable' ng-click='grid.appScope.results(row.entity)'><div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div></div>",
+                cellTemplate: "<div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div>",
                 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                     if (grid.getCellValue(row ,col) === true) {
                         return 'green-cell';
@@ -63,7 +63,8 @@
             }, {
                 field:'created',
                 displayName: 'Time',
-                cellTemplate: "<div>{{row.entity.created | date:'medium'}}</div>",
+                cellTemplate: "<div class='clickable' ng-click='grid.appScope.results(row.entity)'>{{row.entity.created | date:'medium'}}</div>",
+                cellClass: 'blue-cell',
                 width: "20%",
                 resizable: true
             }, {
