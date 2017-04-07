@@ -1,7 +1,18 @@
 var mongoose = require('mongoose');
 var Result = mongoose.model('Result');
+var App = mongoose.model('App');
 var fs = require('fs'); //filesystem
+var nodemailer = require('nodemailer');
 var exec = require('child_process').exec;
+
+// TODO: Figure out where to store this and how to encrypt the password
+var transport = nodemailer.createTransport({
+  service: 'Gmail',
+  auth: {
+      user: 'SyntinelNotification@gmail.com',
+      pass: '@ll$81122'
+  }
+});
 
 var TestSchema = new mongoose.Schema({
   name: String,
@@ -30,7 +41,7 @@ TestSchema.methods.run = function(cb) {
 
     var execCommand = '';
     if (this.scriptType == 'shell') { execCommand = this.file.path;}
-    if (this.scriptType == 'selenium') { execCommand = 'node ' + this.file.path;}
+    if (this.scriptType == 'selenium') { execCommand = 'SELENIUM_REMOTE_URL=http://127.0.0.1:8080/wd/hub node ' + this.file.path;}
 
     var self = this;
 
@@ -49,7 +60,32 @@ TestSchema.methods.run = function(cb) {
         error: error || stderr
       });
 
+    // If error, send results by email to the application holder
+      if(!didPass) {
 
+        App.findById(self.app, function(err, app) {
+          if(err){ console.log('Could not find application for appId: ' + self.app); }
+          console.log("APP: " + app);
+          app.getUser(function (err, user) {
+              if (err) { console.log('Could not find user for app: ', app._id); }
+
+              console.log("USER: " + user);
+
+              // Create Email message
+              var mailOpts = {
+                  from: 'SyntinelNotification@gmail.com',
+                  to: user.email,
+                  subject: 'Test ' + self.name + ' has failed for application ' + app.name,
+                  html: 'Output: ' + result.output + '<br>' + result.error
+              };
+              // Send message
+              transport.sendMail(mailOpts, function(err, info){
+                if(err){ console.log('Could not send email. Error: ' + err) }
+                console.log('Email sent to ' + user.email);
+              });
+          });
+        });
+      }
 
       /* BUG: If a test is mid run, and gets deleted, a result will still
          be created here in the database. The inside function that updates the test
@@ -59,7 +95,7 @@ TestSchema.methods.run = function(cb) {
       // Some sources recommend allowing these records to be created and just scheduling
       // a regular DB cleaning function to delete them.
 
-      result.save(function(err, result){
+      result.save(function(err, result) {
         if(err){ return handleErr(err); }
 
         // If the result was created then push it to the test
@@ -68,8 +104,6 @@ TestSchema.methods.run = function(cb) {
         // And save the test
         self.save(function(err, test) {
           if(err){ return handleErr(err); }
-
-          /* TODO: Make this not return an array */
           return Result.find({ _id: result._id }, cb);
         });
       });

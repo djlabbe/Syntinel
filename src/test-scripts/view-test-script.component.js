@@ -22,6 +22,7 @@
         });
 
         vm.runTest = function(){
+            vm.message = "Test is running, this may take a moment..."
             testScriptSvc.runTest(vm.test).then(function(resp){
             vm.gridOptions.data.push(resp.data[0]);
                vm.message = "Test run complete!"
@@ -50,7 +51,7 @@
             {
                 field:'status',
                 displayName: 'Status',
-                cellTemplate: "<div class='clickable' ng-click='grid.appScope.results(row.entity)'><div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div></div>",
+                cellTemplate: "<div ng-if='row.entity.status == true'>PASS</div><div ng-if='row.entity.status == false'>FAIL</div>",
                 cellClass: function(grid, row, col, rowRenderIndex, colRenderIndex) {
                     if (grid.getCellValue(row ,col) === true) {
                         return 'green-cell';
@@ -64,7 +65,8 @@
             }, {
                 field:'created',
                 displayName: 'Time',
-                cellTemplate: "<div>{{row.entity.created | date:'medium'}}</div>",
+                cellTemplate: "<div class='clickable' ng-click='grid.appScope.results(row.entity)'>{{row.entity.created | date:'medium'}}</div>",
+                cellClass: 'blue-cell',
                 width: "20%",
                 resizable: true
             }, {
@@ -90,9 +92,6 @@
             var url = "/tests/results/" + row._id;
             $location.path(url);
         };
-
-
-
 
 /***************************************************************************/
 /******************* SERVER SENT EVENTS ************************************/

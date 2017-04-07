@@ -21,7 +21,7 @@
         }
 
         function getToken(){
-            return $window.sessionStorage['syntinel-token'];
+           return $window.sessionStorage['syntinel-token'];
         }
 
         function isLoggedIn(){
@@ -60,7 +60,7 @@
         }
 
         function logOut(){
-            $window.sessionStorage.removeItem('syntinel-token');
+            $window.localStorage.removeItem('syntinel-token');
         }
     }
 }());

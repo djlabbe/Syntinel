@@ -3,10 +3,10 @@
  Additionally, we handle scheduled executions of test scripts as well as sending
  a notification to connected clients when run has completed */
 
-require('./models/Results');
-require('./models/Tests');
 require('./models/Users');
+require('./models/Results');
 require('./models/Apps');
+require('./models/Tests');
 require('./config/passport');
 
 var request = require('request');
@@ -19,7 +19,8 @@ var morgan = require('morgan');
 var cookieParser = require('cookie-parser');
 var passport = require('passport');
 var bodyParser = require('body-parser');
-var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
+// var mongoURI = process.env.MONGODB_URI || 'mongodb://localhost/syntinel';
+var mongoURI = 'mongodb://admin:admin@ec2-34-200-223-57.compute-1.amazonaws.com:27017/syntinel'
 var MongoDB = mongoose.connect(mongoURI).connection;
 var Test = mongoose.model('Test');
 

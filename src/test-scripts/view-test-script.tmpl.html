@@ -1,5 +1,17 @@
-<div>
 
+<script>
+    $( '#hideshow' ).click(function() {
+        if($(this).text() == "View Script"){
+            $( '#hideshow' ).text("Hide Script")
+        } else {
+            $(this).text("View Script");
+        }
+    });
+</script>
+
+
+<div>
+    
     <div class="navbar navbar-default">
         <div class="container-fluid">
             <div class="pull-center">
@@ -25,6 +37,11 @@
         </div>
     </div>
 
+    <div id="description">
+        <span><strong>Test Description:&nbsp;</strong><pre>{{$ctrl.test.description}}</pre></span>
+        <br>
+    </div>
+
     <div class="error-message" ng-if="$ctrl.errorMessage!=''">
      {{$ctrl.errorMessage}}
     </div>
@@ -37,14 +54,15 @@
 
     <hr>
 
+
     <div>
-        <button class="btn btn-primary" data-toggle="collapse" data-target="#script">View Script</button>
+        <button id="hideshow" class="btn btn-primary" data-toggle="collapse" data-target="#script">View Script</button>
         <div id="script" class="collapse">
             <span><pre>{{$ctrl.test.filecontents}}</pre></span>
         </div>
     </div>
 
+    <br><br><br>
 
-    
     
 </div>

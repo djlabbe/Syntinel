@@ -17,9 +17,10 @@ router.post('/register', function(req, res, next){
 
   var user = new User();
   user.username = req.body.username;
+  user.email = req.body.email;
   user.setPassword(req.body.password)
   user.save(function (err){
-    if(err){ return next(err); }
+    if(err){ return res.status(422).json(err); }
 
     return res.json({token: user.generateJWT()})
   });

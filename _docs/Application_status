@@ -1,0 +1,17 @@
+
+Application Status:
+
+// Just need to give Application a new field - an array of FailedTests
+Application.FailedTests = [];
+
+Test.Run() -> Failed
+  Test.Application.Status = Fail;
+  if (!Test.Application.FailedTests.contains(Test._id))
+    Test.Application.FailedTests.push(Test._id);
+
+Test.Run() -> Passed
+  if(Test.Application.FailedTests.contains(Test._id))
+    Test.Applications.FailedTests.remove(Test._id)
+    if (Test.Applications.FailedTests.length == 0)
+      Test.Application.Status = Pass
+

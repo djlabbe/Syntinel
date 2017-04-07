@@ -32,7 +32,8 @@
                 vm.menuTree = [{
                     label: 'Add',
                     sref: false,
-                    subMenu: [{
+                    subMenu: [
+                    {
                         label: 'Application',
                         sref: 'addApp'
                     }, 
@@ -45,7 +46,7 @@
                     sref: 'apps'
                 },{
                     label: 'Tests',
-                    sref: 'app'
+                    sref: 'tests'
                 }];
             } else {
                 vm.menuTree = [];
