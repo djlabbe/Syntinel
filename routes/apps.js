@@ -13,6 +13,7 @@ var auth = jwt({secret: 'SECRET', userProperty: 'payload'}); // Change 'SECRET'
                                                              // to env var
 var Test = mongoose.model('Test');
 var App = mongoose.model('App');
+var Result = mongoose.model('Result');
 
 /* Preload a APP object by id */
 router.param('app', function(req, res, next, id) {
@@ -87,9 +88,21 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
 });
 
 router.delete('/apps/:app', function(req,res) {
+
+console.log("App ID: " + req.params.app);
+
+  Test.find({app: req.params.app}, function(err, test){
+      if(err) {return console.log("Error!!"); }
+      if(!test || test.length === 0) { return console.log("Test not found."); }
+      // Remove File from System
+      test.forEach(function(tst){
+        tst.remove();
+      });
+  });
+
   App.findById(req.params.app, function(err, app){
-    if(err){return next(err);} 
-    else if (!app){ return console.log("App not found."); }
+    if(err){return next(err);}
+    if(!app || app.length === 0 ) {console.log('Could not find app'); }
     app.remove();
   });
 });

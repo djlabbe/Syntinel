@@ -17,7 +17,11 @@ var TestSchema = new mongoose.Schema({
 });
 
 TestSchema.pre('remove', function(next){
-  this.model('Result').remove({test_id: this._id}, next);
+
+    // Remove File from System
+    fs.unlinkSync(this.file.path);
+
+    this.model('Result').remove({test_id: this._id}, next);
 });
 
 TestSchema.methods.run = function(cb) {

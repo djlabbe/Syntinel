@@ -65,7 +65,7 @@
         }
 
         // Delete a app in the db
-        function deleteApp(app, id) {
+        function deleteApp(id) {
 
             $http.delete('/apps/' + id);
 

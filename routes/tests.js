@@ -95,13 +95,12 @@ router.put('/tests/:test', auth, function(req, res, next) {
 /* Delete a test */
 router.delete('/tests/:test', function (req, res, next) {
   Test.findById(req.params.test, function(err, test){
-    if(err){return next(err);} 
+    if(err){return next(err);}
     else if (!test){ return console.log("Test not found."); }
     // Remove from db
     test.remove();
 
-    // Remove File from System
-    fs.unlinkSync(test.file.path);
+
 
     App.findById(test.app, function(err, app) {
       if (err){ return next(err);}

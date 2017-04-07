@@ -104,15 +104,14 @@
 
         vm.deleteApplication = function(){
 
-            if (vm.app)
-            {
+            if (vm.app) {
                 //Delete tests
-                (vm.app.tests).forEach(function (test) {
-                    testScriptSvc.deleteTest(test);
-                 });
+                // (vm.app.tests).forEach(function (test) {
+                //     testScriptSvc.deleteTest(test);
+                //  });
 
                 //Delete the application
-                applicationSvc.deleteApp(vm.app, $stateParams.id);
+                applicationSvc.deleteApp(vm.app._id);
 
                 $(".modal-backdrop").hide();    //Hide bootstrap modal
 
