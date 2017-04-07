@@ -55,7 +55,7 @@ router.post('/apps', function(req, res, next) {
 });
 
 /* Save a new test, update the app*/
-router.post('/app/:app/tests', upload.single('file'), function (req, res, next) {
+router.post('/apps/:app/tests', upload.single('file'), function (req, res, next) {
   fs.readFile(req.file.path, 'utf8', function (err,data) {
     if (err) { return next(err); }
     var filecontents = filecontents = data;
@@ -89,24 +89,18 @@ router.post('/app/:app/tests', upload.single('file'), function (req, res, next) 
 
 router.delete('/apps/:app', function(req,res) {
 
-console.log("App ID: " + req.params.app);
-
   Test.find({app: req.params.app}, function(err, test){
       if(err) {return console.log("Error!!"); }
       if(!test || test.length === 0) { return console.log("Test not found."); }
-      // Remove File from System
       test.forEach(function(tst){
         tst.remove();
       });
   });
-
   App.findById(req.params.app, function(err, app){
     if(err){return next(err);}
     if(!app || app.length === 0 ) {console.log('Could not find app'); }
     app.remove();
   });
 });
-
-
 
 module.exports = router;
