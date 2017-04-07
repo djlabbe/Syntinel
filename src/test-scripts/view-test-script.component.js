@@ -22,6 +22,7 @@
         });
 
         vm.runTest = function(){
+            vm.message = "Test is running, this may take a moment..."
             testScriptSvc.runTest(vm.test).then(function(resp){
             vm.gridOptions.data.push(resp.data[0]);
                vm.message = "Test run complete!"

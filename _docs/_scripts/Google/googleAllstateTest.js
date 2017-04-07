@@ -3,15 +3,9 @@
 */
  
 "use strict";
+require('chromedriver');
 var webdriver = require('selenium-webdriver');
-
-console.log("START");
-
-var browser = new webdriver.Builder()
-    .forBrowser('chrome')
-    .usingServer('http://127.0.0.1:8080/wd/hub')
-    .build();
-
+var browser = new webdriver.Builder().usingServer().withCapabilities({'browserName': 'chrome' }).build();
  
 function logTitle() {
     browser.getTitle().then(function(title) {
@@ -28,8 +22,8 @@ function handleFailure(err) {
     closeBrowser();
 }
  
-function findTutsPlusLink() {
-    return browser.findElements(webdriver.By.css('[href="https://code.tutsplus.com/"]')).then(function(result) {
+function findLink() {
+    return browser.findElements(webdriver.By.css('[href="https://www.allstate.com/"]')).then(function(result) {
         return result[0];
     });
 }
@@ -39,6 +33,6 @@ function closeBrowser() {
 }
  
 browser.get('https://www.google.com');
-browser.findElement(webdriver.By.name('q')).sendKeys('tuts+ code');
+browser.findElement(webdriver.By.name('q')).sendKeys('allstate');
 browser.findElement(webdriver.By.name('btnG')).click();
-browser.wait(findTutsPlusLink, 5000).then(clickLink).then(logTitle).then(closeBrowser, handleFailure);
+browser.wait(findLink, 5000).then(clickLink).then(logTitle).then(closeBrowser, handleFailure);
